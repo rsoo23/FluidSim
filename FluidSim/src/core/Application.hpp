@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include "shader/Shader.hpp"
 
 class Application {
