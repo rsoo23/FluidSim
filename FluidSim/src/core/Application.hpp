@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shader/Shader.hpp"
+#include "render/Renderer.hpp"
 
 class Application {
 public:
@@ -13,7 +14,7 @@ public:
 	Application(Application&&)					= delete;
 	Application& operator=(Application&&)		= delete;
 
-	void run();
+	void run(Shader& shader, Renderer& renderer);
 
 private:
 	void processInput();

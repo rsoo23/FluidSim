@@ -36,20 +36,14 @@ Application::Application(int versionMajor, int versionMinor, int width, int heig
 	glfwSetFramebufferSizeCallback(m_Window, framebuffer_size_callback);
 };
 
-void Application::run() {
+void Application::run(Shader& shader, Renderer& renderer)
+{
 	while (!glfwWindowShouldClose(m_Window))  
 	{  
 		// input
 		processInput();
 
-		// rendering commands
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		//glBindTexture(GL_TEXTURE_2D, texture); 
-		//m_Shader.use();
-		//glBindVertexArray(VAO);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		renderer.render(shader);
 
 		// Swap buffers and poll events  
 		glfwSwapBuffers(m_Window);  
