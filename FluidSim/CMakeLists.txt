@@ -12,6 +12,7 @@ add_executable(FluidSim
 	"main.cpp"
 	"pch.h"
 	"src/shader/Shader.cpp"
+	"src/core/Application.cpp"
 )
 
 target_link_libraries(FluidSim PRIVATE
