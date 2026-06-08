@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Shader.hpp"
 
-Shader::Shader(std::filesystem::path vertexPath, std::filesystem::path fragmentPath)
+Shader::Shader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath)
 {
 	// 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;

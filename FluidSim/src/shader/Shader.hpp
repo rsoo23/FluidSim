@@ -15,7 +15,7 @@ public:
     unsigned int programId;
   
     // constructor reads and builds the shader
-    Shader(std::filesystem::path vertexPath, std::filesystem::path fragmentPath);
+    Shader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath);
 
     // use / activate the shader
     void use();
