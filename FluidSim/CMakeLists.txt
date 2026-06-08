@@ -14,6 +14,7 @@ add_executable(FluidSim
 	"src/shader/Shader.cpp"
 	"src/core/Application.cpp"
 	"src/render/Renderer.cpp"
+	"src/input/InputHandler.cpp"
 )
 
 target_link_libraries(FluidSim PRIVATE

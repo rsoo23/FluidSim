@@ -2,6 +2,7 @@
 
 #include "shader/Shader.hpp"
 #include "render/Renderer.hpp"
+#include "input/InputHandler.hpp"
 
 class Application {
 public:
@@ -14,9 +15,9 @@ public:
 	Application(Application&&)					= delete;
 	Application& operator=(Application&&)		= delete;
 
-	void run(Shader& shader, Renderer& renderer);
+	void run(Shader& shader, Renderer& renderer, InputHandler& inputHandler);
 
 private:
-	void processInput();
+	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 	GLFWwindow* m_Window;
 };

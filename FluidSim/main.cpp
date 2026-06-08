@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "core/Application.hpp"
 #include "render/Renderer.hpp"
+#include "input/InputHandler.hpp"
 
 int main()  
 {  
@@ -42,7 +43,11 @@ int main()
 
 	Renderer renderer(bgColor, vertices, indices, textureData);
 
-	app.run(shader, renderer);
+	// input handler setup
+	InputHandler inputHandler;
+
+	// run application
+	app.run(shader, renderer, inputHandler);
 
 	return 0;  
 }
