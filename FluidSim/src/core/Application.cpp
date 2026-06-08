@@ -39,6 +39,10 @@ void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHan
 	inputHandler.init(m_Window);
 	while (!glfwWindowShouldClose(m_Window))  
 	{  
+		auto mouseDragCoords = inputHandler.getMouseDragCoords();
+		if (mouseDragCoords) {
+			std::cout << "x: " << (*mouseDragCoords).x << ", y: " << (*mouseDragCoords).y << "\n";
+		}
 		renderer.render(shader);
 
 		// Swap buffers and poll events  

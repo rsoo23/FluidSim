@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include "shader/Shader.hpp"
 #include "render/Renderer.hpp"
 
@@ -14,6 +15,8 @@ public:
 	InputHandler& operator=(InputHandler&&)			= delete;
 
 	void init(GLFWwindow* window);
+
+	std::optional<glm::vec2> getMouseDragCoords() const;
 
 private:
 	static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
