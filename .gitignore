@@ -1,1 +1,4 @@
 vcpkg_installed/
+out/
+build/
+.vs/
