@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include "shader/Shader.hpp"
 
 struct TextureData {
@@ -11,6 +12,7 @@ struct TextureData {
 class Renderer {
 public:
 	Renderer(
+		const glm::vec4& bgColor,
 		const std::vector<float>& vertices,
 		const std::vector<unsigned int>& indices,
 		const TextureData& textureData
@@ -27,4 +29,5 @@ public:
 
 private:
 	unsigned int m_TextureId, m_VBO, m_VAO, m_EBO, m_PBO;
+	glm::vec4 m_BgColor;
 };

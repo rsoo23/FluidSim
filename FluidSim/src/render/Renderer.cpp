@@ -2,10 +2,11 @@
 #include "Renderer.hpp"
 
 Renderer::Renderer(
+	const glm::vec4& bgColor,
 	const std::vector<float>& vertices,
 	const std::vector<unsigned int>& indices,
 	const TextureData& textureData
-)
+): m_BgColor(bgColor)
 {
 	// PBO
 	//glGenBuffers(1, &PBO);
@@ -46,7 +47,7 @@ Renderer::Renderer(
 void Renderer::render(Shader& shader)
 {
 	// clear bg
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClearColor(m_BgColor.r, m_BgColor.g, m_BgColor.b, m_BgColor.a);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// bind texture

@@ -34,12 +34,13 @@ int main()
         1, 2, 3  // second triangle
     };
 
+	const glm::vec4 bgColor(0.f, 0.f, 0.f, 1.f);
 	TextureData textureData;
 	textureData.width = 400;
 	textureData.height = 300;
 	textureData.pixels = std::vector<uint8_t>(textureData.width * textureData.height * 3, 128);
 
-	Renderer renderer(vertices, indices, textureData);
+	Renderer renderer(bgColor, vertices, indices, textureData);
 
 	app.run(shader, renderer);
 
