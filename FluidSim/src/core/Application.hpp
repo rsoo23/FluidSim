@@ -15,9 +15,11 @@ public:
 	Application(Application&&)					= delete;
 	Application& operator=(Application&&)		= delete;
 
-	void run(Shader& shader, Renderer& renderer, InputHandler& inputHandler);
+	void run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, TextureData& textureData);
 
 private:
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 	GLFWwindow* m_Window;
+	int m_ScreenWidth;
+	int m_ScreenHeight;
 };

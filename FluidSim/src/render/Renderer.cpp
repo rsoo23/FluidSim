@@ -4,8 +4,7 @@
 Renderer::Renderer(
 	const glm::vec4& bgColor,
 	const std::vector<float>& vertices,
-	const std::vector<unsigned int>& indices,
-	const TextureData& textureData
+	const std::vector<unsigned int>& indices	
 ): m_BgColor(bgColor)
 {
 	// PBO
@@ -15,7 +14,7 @@ Renderer::Renderer(
 	// Texture setup
 	glGenTextures(1, &m_TextureId);
 	glBindTexture(GL_TEXTURE_2D, m_TextureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.width, textureData.height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.pixels.data());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -44,7 +43,7 @@ Renderer::Renderer(
 	glEnableVertexAttribArray(1);
 }
 
-void Renderer::render(Shader& shader)
+void Renderer::render(Shader& shader, const TextureData& textureData)
 {
 	// clear bg
 	glClearColor(m_BgColor.r, m_BgColor.g, m_BgColor.b, m_BgColor.a);
@@ -52,6 +51,7 @@ void Renderer::render(Shader& shader)
 
 	// bind texture
 	glBindTexture(GL_TEXTURE_2D, m_TextureId); 
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 800, 600, GL_RGB, GL_UNSIGNED_BYTE, textureData.pixels.data());
 
 	// user shaders
 	shader.use();

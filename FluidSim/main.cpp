@@ -24,10 +24,10 @@ int main()
 	// renderer setup
 	std::vector<float> vertices = {
 		// positions         // texture coords
-		 1.0f,  1.0f, 0.0f,  1.0f, 1.0f,   // top right
-		 1.0f, -1.0f, 0.0f,  1.0f, 0.0f,   // bottom right
-		-1.0f, -1.0f, 0.0f,  0.0f, 0.0f,   // bottom left
-		-1.0f,  1.0f, 0.0f,  0.0f, 1.0f    // top left 
+		 1.0f,  1.0f, 0.0f,  1.0f, 0.0f,   // top right
+		 1.0f, -1.0f, 0.0f,  1.0f, 1.0f,   // bottom right
+		-1.0f, -1.0f, 0.0f,  0.0f, 1.0f,   // bottom left
+		-1.0f,  1.0f, 0.0f,  0.0f, 0.0f    // top left 
 	};
 
 	std::vector<unsigned int> indices = {  
@@ -37,17 +37,17 @@ int main()
 
 	const glm::vec4 bgColor(0.f, 0.f, 0.f, 1.f);
 	TextureData textureData;
-	textureData.width = 400;
-	textureData.height = 400;
-	textureData.pixels = std::vector<uint8_t>(textureData.width * textureData.height * 3, 0);
+	//textureData.width = 400;
+	//textureData.height = 400;
+	textureData.pixels = std::vector<uint8_t>(width * height * 3, 0);
 
-	Renderer renderer(bgColor, vertices, indices, textureData);
+	Renderer renderer(bgColor, vertices, indices);
 
 	// input handler setup
 	InputHandler inputHandler;
 
 	// run application
-	app.run(shader, renderer, inputHandler);
+	app.run(shader, renderer, inputHandler, textureData);
 
 	return 0;  
 }

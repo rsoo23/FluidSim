@@ -3,7 +3,7 @@
 #include "shader/Shader.hpp"
 #include "input/InputHandler.hpp"
 
-Application::Application(int versionMajor, int versionMinor, int width, int height, std::string_view title)
+Application::Application(int versionMajor, int versionMinor, int width, int height, std::string_view title) : m_ScreenWidth(width), m_ScreenHeight(height)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);  
@@ -34,23 +34,29 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler)
+void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, TextureData& textureData)
 {
 	inputHandler.init(m_Window);
 	while (!glfwWindowShouldClose(m_Window))  
 	{  
 		auto mouseDragCoords = inputHandler.getMouseDragCoords();
 		if (mouseDragCoords) {
-			std::cout << "x: " << (*mouseDragCoords).x << ", y: " << (*mouseDragCoords).y << "\n";
+			auto mouseX = (*mouseDragCoords).x;
+			auto mouseY = (*mouseDragCoords).y;
+			auto pixelCoord = ((mouseY * m_ScreenWidth) + mouseX) * 3;
+			//std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";
+			//std::cout << "convert: " << pixelCoord << "\n";
+			textureData.pixels[pixelCoord] = 0;
+			textureData.pixels[pixelCoord + 1] = 0;
+			textureData.pixels[pixelCoord + 2] = 128;
 		}
-		renderer.render(shader);
+		renderer.render(shader, textureData);
 
 		// Swap buffers and poll events  
 		glfwSwapBuffers(m_Window);  
 		glfwPollEvents();  
 	}  
 }
-
 
 Application::~Application()
 {

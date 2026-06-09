@@ -14,8 +14,7 @@ public:
 	Renderer(
 		const glm::vec4& bgColor,
 		const std::vector<float>& vertices,
-		const std::vector<unsigned int>& indices,
-		const TextureData& textureData
+		const std::vector<unsigned int>& indices
 	);
 	~Renderer();
 
@@ -25,7 +24,7 @@ public:
 	Renderer(Renderer&&)					= delete;
 	Renderer& operator=(Renderer&&)			= delete;
 
-	void render(Shader& shader);
+	void render(Shader& shader, const TextureData& textureData);
 
 private:
 	unsigned int m_TextureId, m_VBO, m_VAO, m_EBO, m_PBO;
