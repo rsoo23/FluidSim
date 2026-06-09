@@ -9,6 +9,7 @@ Application::Application(int versionMajor, int versionMinor, int width, int heig
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);  
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor);  
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	m_Window = glfwCreateWindow(width, height, "FluidSim", NULL, NULL);  
 
