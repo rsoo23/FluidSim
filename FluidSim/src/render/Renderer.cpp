@@ -7,11 +7,7 @@ Renderer::Renderer(
 	const std::vector<unsigned int>& indices	
 ): m_BgColor(bgColor)
 {
-	// PBO
-	//glGenBuffers(1, &PBO);
-	//glBindBuffer(GL_PIXEL_PACK_BUFFER, PBO);
-
-	// Texture setup
+	// texture setup
 	glGenTextures(1, &m_TextureId);
 	glBindTexture(GL_TEXTURE_2D, m_TextureId);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);

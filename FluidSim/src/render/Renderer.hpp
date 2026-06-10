@@ -27,6 +27,6 @@ public:
 	void render(Shader& shader, const TextureData& textureData);
 
 private:
-	unsigned int m_TextureId, m_VBO, m_VAO, m_EBO, m_PBO;
+	GLuint m_TextureId, m_VBO, m_VAO, m_EBO;
 	glm::vec4 m_BgColor;
 };
