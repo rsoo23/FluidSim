@@ -7,7 +7,7 @@
 int main()  
 {  
 	// application setup
-	constexpr int versionMajor{ 3 };
+	constexpr int versionMajor{ 4 };
 	constexpr int versionMinor{ 3 };
 	constexpr int width{ 800 };
 	constexpr int height{ 600 };
