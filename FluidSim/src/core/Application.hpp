@@ -3,6 +3,7 @@
 #include "shader/Shader.hpp"
 #include "render/Renderer.hpp"
 #include "input/InputHandler.hpp"
+#include "simulation/FluidSim.hpp"
 
 class Application {
 public:
@@ -15,7 +16,7 @@ public:
 	Application(Application&&)					= delete;
 	Application& operator=(Application&&)		= delete;
 
-	void run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, TextureData& textureData);
+	void run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, FluidSim& fluidSim, TextureData& textureData);
 
 private:
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);

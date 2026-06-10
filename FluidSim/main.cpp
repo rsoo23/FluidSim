@@ -2,6 +2,7 @@
 #include "core/Application.hpp"
 #include "render/Renderer.hpp"
 #include "input/InputHandler.hpp"
+#include "simulation/FluidSim.hpp"
 
 int main()  
 {  
@@ -46,8 +47,11 @@ int main()
 	// input handler setup
 	InputHandler inputHandler;
 
+	// fluid simulation setup
+	FluidSim fluidSim(width, height);
+
 	// run application
-	app.run(shader, renderer, inputHandler, textureData);
+	app.run(shader, renderer, inputHandler, fluidSim, textureData);
 
 	return 0;  
 }

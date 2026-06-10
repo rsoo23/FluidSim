@@ -2,6 +2,7 @@
 #include "Application.hpp"
 #include "shader/Shader.hpp"
 #include "input/InputHandler.hpp"
+#include "simulation/FluidSim.hpp"
 
 Application::Application(int versionMajor, int versionMinor, int width, int height, std::string_view title) : m_ScreenWidth(width), m_ScreenHeight(height)
 {
@@ -35,7 +36,7 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, TextureData& textureData)
+void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, FluidSim& fluidSim, TextureData& textureData)
 {
 	inputHandler.init(m_Window);
 	while (!glfwWindowShouldClose(m_Window))  
@@ -51,6 +52,7 @@ void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHan
 			textureData.pixels[pixelCoord + 1] = 0;
 			textureData.pixels[pixelCoord + 2] = 128;
 		}
+		//fluidSim.step();
 		renderer.render(shader, textureData);
 
 		// Swap buffers and poll events  
