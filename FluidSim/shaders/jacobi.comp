@@ -1,7 +1,8 @@
 #version 460 core
 layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
-layout(rg32f, binding = 0) readonly uniform image2D readTexture;
-layout(rg32f, binding = 1) writeonly uniform image2D writeTexture;
+layout(r32f, binding = 0) readonly uniform image2D readTexture1;
+layout(r32f, binding = 1) readonly uniform image2D readTexture2;
+layout(r32f, binding = 2) writeonly uniform image2D writeTexture;
 
 uniform float a;
 uniform float c;
@@ -10,30 +11,25 @@ uniform float screenHeight;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
-    vec2 val = imageLoad(readTexture, id).rg;
+    float val1 = imageLoad(readTexture1, id).r;
+    float val2 = imageLoad(readTexture1, id).r;
 
     ivec2 coordLeft     = id + ivec2(-1, 0);
     ivec2 coordRight    = id + ivec2(1, 0);
     ivec2 coordUp       = id + ivec2(0, 1);
     ivec2 coordDown     = id + ivec2(0, -1);
 
-    vec2 valLeft    = imageLoad(readTexture, coordLeft).rg;
-    vec2 valRight   = imageLoad(readTexture, coordRight).rg;
-    vec2 valUp      = imageLoad(readTexture, coordUp).rg;
-    vec2 valDown    = imageLoad(readTexture, coordDown).rg;
+    float valLeft    = imageLoad(readTexture1, coordLeft).r;
+    float valRight   = imageLoad(readTexture1, coordRight).r;
+    float valUp      = imageLoad(readTexture1, coordUp).r;
+    float valDown    = imageLoad(readTexture1, coordDown).r;
 
-    float leftX     = id.x > 0                  ? valLeft.x     : val.x;
-    float rightX    = id.x < screenWidth - 1    ? valRight.x    : val.x;
-    float upX       = id.y > 0                  ? valUp.x       : val.x;
-    float downX     = id.y < screenHeight - 1   ? valDown.x     : val.x;
+    float left     = id.x > 0                  ? valLeft  : val1;
+    float right    = id.x < screenWidth - 1    ? valRight : val1;
+    float up       = id.y > 0                  ? valUp    : val1;
+    float down     = id.y < screenHeight - 1   ? valDown  : val1;
 
-    float leftY     = id.x > 0                  ? valLeft.y     : val.y;
-    float rightY    = id.x < screenWidth - 1    ? valRight.y    : val.y;
-    float upY       = id.y > 0                  ? valUp.y       : val.y;
-    float downY     = id.y < screenHeight - 1   ? valDown.y     : val.y;
+    float finalVal = (val2 + a * (left + right + up + down)) / c;
 
-    float finalX = (val.x + a * (leftX + rightX + upX + downX)) / c;
-    float finalY = (val.y + a * (leftY + rightY + upY + downY)) / c;
-
-    imageStore(writeTexture, id, vec4(finalX, finalY, 0.0, 0.0));
+    imageStore(writeTexture, id, vec4(finalVal, 0.0, 0.0, 0.0));
 }

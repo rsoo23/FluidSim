@@ -1,7 +1,8 @@
 #version 460 core
 layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
-layout(rg32f, binding = 0) uniform image2D velTexture;
-layout(r32f, binding = 1) uniform image2D densTexture;
+layout(r32f, binding = 0) uniform image2D velXTexture;
+layout(r32f, binding = 1) uniform image2D velYTexture;
+layout(r32f, binding = 2) uniform image2D densTexture;
 
 uniform vec2 mousePos;
 uniform vec2 mouseForce;
@@ -20,12 +21,15 @@ void main() {
 
     if (falloff < 0.001) return;
 
-    vec2 vel = imageLoad(velTexture, id).rg;
+    float velX = imageLoad(velXTexture, id).r;
+    float velY = imageLoad(velYTexture, id).r;
     float dens = imageLoad(densTexture, id).r;
 
-    vel += mouseForce * falloff;
+    velX += mouseForce * falloff;
+    velY += mouseForce * falloff;
     dens += newDens * falloff;
 
-    imageStore(velTexture, id, vec4(vel, 0.0, 0.0));
+    imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));
+    imageStore(velYTexture, id, vec4(velY, 0.0, 0.0, 0.0));
     imageStore(densTexture, id, vec4(dens, 0.0, 0.0, 0.0));
 }

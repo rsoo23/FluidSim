@@ -28,7 +28,8 @@ private:
 	float m_DeltaTime;
 	float m_JacobiIterations;
 	// Velocity
-	GLuint m_VelTexture, m_VelTextureNext;
+	GLuint m_VelXTexture, m_VelXTextureNext;
+	GLuint m_VelYTexture, m_VelYTextureNext;
 	// Pressure
 	GLuint m_PresTexture, m_PresTextureNext;
 	// Divergence

@@ -13,8 +13,10 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_C(1.f * 4.f * m_A)
 {
 	// compute shader textures setup
-	m_VelTexture		= generateTexture(800, 600, GL_RG32F);
-	m_VelTextureNext	= generateTexture(800, 600, GL_RG32F);
+	m_VelXTexture		= generateTexture(800, 600, GL_R32F);
+	m_VelXTextureNext	= generateTexture(800, 600, GL_R32F);
+	m_VelYTexture		= generateTexture(800, 600, GL_R32F);
+	m_VelYTextureNext	= generateTexture(800, 600, GL_R32F);
 
 	m_PresTexture		= generateTexture(800, 600, GL_R32F);
 	m_PresTextureNext	= generateTexture(800, 600, GL_R32F);
@@ -25,8 +27,10 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_DensTextureNext	= generateTexture(800, 600, GL_R32F);
 
 	// fill textures with 0
-	glClearTexImage(m_VelTexture, 0, GL_RG, GL_FLOAT, NULL);
-	glClearTexImage(m_VelTextureNext, 0, GL_RG, GL_FLOAT, NULL);
+	glClearTexImage(m_VelXTexture, 0, GL_RED, GL_FLOAT, NULL);
+	glClearTexImage(m_VelXTextureNext, 0, GL_RED, GL_FLOAT, NULL);
+	glClearTexImage(m_VelYTexture, 0, GL_RED, GL_FLOAT, NULL);
+	glClearTexImage(m_VelYTextureNext, 0, GL_RED, GL_FLOAT, NULL);
 	glClearTexImage(m_PresTexture, 0, GL_RED, GL_FLOAT, NULL);
 	glClearTexImage(m_PresTextureNext, 0, GL_RED, GL_FLOAT, NULL);
 	glClearTexImage(m_DivTexture, 0, GL_RED, GL_FLOAT, NULL);
@@ -45,8 +49,9 @@ void FluidSim::step(glm::vec2 mousePos)
 {
 	// add forces
 	//m_AddForceShader.setFloat("deltaTime", m_DeltaTime);
-	m_AddForceShader.bindImageTexture(0, m_VelTexture, GL_READ_WRITE, GL_RG32F);
-	m_AddForceShader.bindImageTexture(1, m_DensTexture, GL_READ_WRITE, GL_R32F);
+	m_AddForceShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
+	m_AddForceShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
+	m_AddForceShader.bindImageTexture(2, m_DensTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.use();
 	m_AddForceShader.setVec2("mousePos", mousePos);
 	m_AddForceShader.setVec2("mouseForce", glm::vec2(2, 2));
@@ -56,14 +61,27 @@ void FluidSim::step(glm::vec2 mousePos)
 	// diffuse velocities
 	for (int i = 0; i < m_JacobiIterations; ++i)
 	{
-		m_JacobiShader.bindImageTexture(0, m_VelTexture, GL_READ_ONLY, GL_RG32F);
-		m_JacobiShader.bindImageTexture(1, m_VelTextureNext, GL_WRITE_ONLY, GL_RG32F);
+		m_JacobiShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(1, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(2, m_VelXTextureNext, GL_WRITE_ONLY, GL_R32F);
 		m_JacobiShader.use();
 		m_JacobiShader.setFloat("a", m_A);
 		m_JacobiShader.setFloat("c", m_C);
 		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
 		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
-		std::swap(m_VelTexture, m_VelTextureNext);
+		std::swap(m_VelXTexture, m_VelXTextureNext);
+	}
+	for (int i = 0; i < m_JacobiIterations; ++i)
+	{
+		m_JacobiShader.bindImageTexture(0, m_VelYTexture, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(1, m_VelYTexture, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(2, m_VelYTextureNext, GL_WRITE_ONLY, GL_R32F);
+		m_JacobiShader.use();
+		m_JacobiShader.setFloat("a", m_A);
+		m_JacobiShader.setFloat("c", m_C);
+		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
+		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
+		std::swap(m_VelYTexture, m_VelYTextureNext);
 	}
 
 	// project
