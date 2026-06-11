@@ -37,7 +37,7 @@ private:
 	// Density
 	GLuint m_DensTexture, m_DensTextureNext;
 	// Compute Shader
-	ComputeShader m_AddForceShader, m_AdvectShader, m_DiffuseShader, m_JacobiShader, m_ProjectShader;
+	ComputeShader m_AddForceShader, m_AdvectShader, m_DiffuseShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader;
 	// Precalculated constants
 	// Diffusion:
 	float m_A;

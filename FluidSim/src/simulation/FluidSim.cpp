@@ -43,6 +43,7 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_DiffuseShader		= ComputeShader{ R"(shaders\diffuse.comp)" };
 	m_JacobiShader		= ComputeShader{ R"(shaders\jacobi.comp)" };
 	m_ProjectShader		= ComputeShader{ R"(shaders\project.comp)" };
+	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)" };
 }
 
 void FluidSim::step(glm::vec2 mousePos)
@@ -85,6 +86,33 @@ void FluidSim::step(glm::vec2 mousePos)
 	}
 
 	// project
+	// divergence
+	m_DivergenceShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+	m_DivergenceShader.bindImageTexture(1, m_VelYTexture, GL_READ_ONLY, GL_R32F);
+	m_DivergenceShader.bindImageTexture(2, m_DivTexture, GL_WRITE_ONLY, GL_R32F);
+	m_DivergenceShader.use();
+	m_DivergenceShader.setFloat("screenWidth", m_ScreenWidth);
+	m_DivergenceShader.setFloat("screenHeight", m_ScreenHeight);
+	// solve pressure poisson
+	for (int i = 0; i < m_JacobiIterations; ++i)
+	{
+		m_JacobiShader.bindImageTexture(0, m_DivTexture, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(1, m_PresTexture, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(2, m_PresTextureNext, GL_WRITE_ONLY, GL_R32F);
+		m_JacobiShader.use();
+		m_JacobiShader.setFloat("a", 1.f);
+		m_JacobiShader.setFloat("c", 4.f);
+		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
+		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
+		std::swap(m_PresTexture, m_PresTextureNext);
+	}
+	// subtract pressure gradient for incompressibility
+	m_ProjectShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
+	m_ProjectShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
+	m_ProjectShader.bindImageTexture(2, m_PresTexture, GL_READ_ONLY, GL_R32F);
+	m_ProjectShader.use();
+	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
+	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
 
 	// advect velocities
 	// project
