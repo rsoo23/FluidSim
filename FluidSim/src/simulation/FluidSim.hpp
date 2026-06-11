@@ -26,6 +26,7 @@ private:
 	float m_DiffuseFactor;
 	float m_Viscosity;
 	float m_DeltaTime;
+	float m_JacobiIterations;
 	// Velocity
 	GLuint m_VelTexture, m_VelTextureNext;
 	// Pressure
@@ -36,4 +37,8 @@ private:
 	GLuint m_DensTexture, m_DensTextureNext;
 	// Compute Shader
 	ComputeShader m_AddForceShader, m_AdvectShader, m_DiffuseShader, m_JacobiShader, m_ProjectShader;
+	// Precalculated constants
+	// Diffusion:
+	float m_A;
+	float m_C;
 };

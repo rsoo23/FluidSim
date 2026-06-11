@@ -1,0 +1,39 @@
+#version 460 core
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+layout(rg32f, binding = 0) readonly uniform image2D velTexture;
+layout(rg32f, binding = 1) writeonly uniform image2D velTextureNext;
+
+uniform float a;
+uniform float c;
+uniform float screenWidth;
+uniform float screenHeight;
+
+void main() {
+    ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    vec2 vel = imageLoad(velTexture, id).rg;
+
+    ivec2 coordLeft     = id + ivec2(-1, 0);
+    ivec2 coordRight    = id + ivec2(1, 0);
+    ivec2 coordUp       = id + ivec2(0, 1);
+    ivec2 coordDown     = id + ivec2(0, -1);
+
+    vec2 velLeft    = imageLoad(velTexture, coordLeft).rg;
+    vec2 velRight   = imageLoad(velTexture, coordRight).rg;
+    vec2 velUp      = imageLoad(velTexture, coordUp).rg;
+    vec2 velDown    = imageLoad(velTexture, coordDown).rg;
+
+    float leftX     = id.x > 0                  ? velLeft.x     : vel.x;
+    float rightX    = id.x < screenWidth - 1    ? velRight.x    : vel.x;
+    float upX       = id.y > 0                  ? velUp.x       : vel.x;
+    float downX     = id.y < screenHeight - 1   ? velDown.x     : vel.x;
+
+    float leftY     = id.x > 0                  ? velLeft.y     : vel.y;
+    float rightY    = id.x < screenWidth - 1    ? velRight.y    : vel.y;
+    float upY       = id.y > 0                  ? velUp.y       : vel.y;
+    float downY     = id.y < screenHeight - 1   ? velDown.y     : vel.y;
+
+    float finalX = (vel.x + a * (leftX + rightX + upX + downX)) / c;
+    float finalY = (vel.y + a * (leftY + rightY + upY + downY)) / c;
+
+    imageStore(velTextureNext, id, vec4(finalX, finalY, 0.0, 0.0));
+}

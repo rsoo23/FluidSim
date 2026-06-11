@@ -7,7 +7,10 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_ScreenHeight(screenHeight),
 	m_DiffuseFactor(1.f),
 	m_Viscosity(1.f),
-	m_DeltaTime(1 / 60)
+	m_DeltaTime(1 / 60),
+	m_JacobiIterations(20),
+	m_A(m_DiffuseFactor * m_DeltaTime),
+	m_C(1.f * 4.f * m_A)
 {
 	// compute shader textures setup
 	m_VelTexture		= generateTexture(800, 600, GL_RG32F);
@@ -51,6 +54,18 @@ void FluidSim::step(glm::vec2 mousePos)
 	m_AddForceShader.setFloat("radius", 10.f); // radius of influence
 
 	// diffuse velocities
+	for (int i = 0; i < m_JacobiIterations; ++i)
+	{
+		m_JacobiShader.bindImageTexture(0, m_VelTexture, GL_READ_ONLY, GL_RG32F);
+		m_JacobiShader.bindImageTexture(1, m_VelTextureNext, GL_WRITE_ONLY, GL_RG32F);
+		m_JacobiShader.use();
+		m_JacobiShader.setFloat("a", m_A);
+		m_JacobiShader.setFloat("c", m_C);
+		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
+		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
+		std::swap(m_VelTexture, m_VelTextureNext);
+	}
+
 	// project
 
 	// advect velocities
