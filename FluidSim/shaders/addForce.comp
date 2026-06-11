@@ -27,5 +27,5 @@ void main() {
     dens += newDens * falloff;
 
     imageStore(velTexture, id, vec4(vel, 0.0, 0.0));
-    imageStore(densTexture, id, vec4(dens, 0.0, 0.0, 1.0));
+    imageStore(densTexture, id, vec4(dens, 0.0, 0.0, 0.0));
 }
