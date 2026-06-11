@@ -3,12 +3,6 @@
 #include <glm/glm.hpp>
 #include "shader/Shader.hpp"
 
-struct TextureData {
-	unsigned int width;
-	unsigned int height;
-	std::vector<uint8_t> pixels;
-};
-
 class Renderer {
 public:
 	Renderer(
@@ -24,9 +18,9 @@ public:
 	Renderer(Renderer&&)					= delete;
 	Renderer& operator=(Renderer&&)			= delete;
 
-	void render(Shader& shader, const TextureData& textureData);
+	void render(Shader& shader, GLuint finalTexture);
 
 private:
-	GLuint m_TextureId, m_VBO, m_VAO, m_EBO;
+	GLuint m_VBO, m_VAO, m_EBO;
 	glm::vec4 m_BgColor;
 };

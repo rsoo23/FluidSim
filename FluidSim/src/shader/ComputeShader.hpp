@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -12,20 +13,27 @@ class ComputeShader
 public:
     ComputeShader(const std::filesystem::path& path);
 
-	ComputeShader()                 				= delete;
+	ComputeShader()                 				= default;
 	ComputeShader(const ComputeShader&)				= delete;
-	ComputeShader& operator=(const ComputeShader&)	= delete;
+	ComputeShader& operator=(const ComputeShader&)  = delete;
 	ComputeShader(ComputeShader&&)					= delete;
-	ComputeShader& operator=(ComputeShader&&)		= delete;
+	ComputeShader& operator=(ComputeShader&&)		= default;
 
     void use();
 
+    void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
+
+    void setFloat(const std::string& name, float value) const;
+    void setVec2(const std::string& name, glm::vec2 v) const;
+
+    GLuint getProgramId() const;
+
 private:
-    unsigned int programId;
+    GLuint programId;
     enum class ShaderType {
         COMPUTE_SHADER,
         PROGRAM
     };
-    void checkComputeShaderError(unsigned int id, ShaderType type) const;
+    void checkComputeShaderError(GLuint id, ShaderType type) const;
 };
   

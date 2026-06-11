@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include "shader/ComputeShader.hpp"
+
 class FluidSim {
 public:
 	FluidSim(int screenWidth, int screenHeight);
@@ -11,9 +14,11 @@ public:
 	FluidSim(FluidSim&&)					= delete;
 	FluidSim& operator=(FluidSim&&)			= delete;
 
-	void step();
+	void step(glm::vec2 mousePos);
 
-	GLuint generateTexture(int w, int h, GLint internalFormat, GLenum texImage2DFormat, GLuint unit, GLenum bindImageTexFormat);
+	GLuint generateTexture(int w, int h, GLenum internalFormat);
+
+	GLuint getFinalTexture() const;
 
 private:
 	int m_ScreenWidth;
@@ -29,4 +34,6 @@ private:
 	GLuint m_DivTexture;
 	// Density
 	GLuint m_DensTexture, m_DensTextureNext;
+	// Compute Shader
+	ComputeShader m_AddForceShader, m_AdvectShader, m_DiffuseShader, m_JacobiShader, m_ProjectShader;
 };

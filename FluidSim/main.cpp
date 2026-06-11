@@ -8,7 +8,7 @@ int main()
 {  
 	// application setup
 	constexpr int versionMajor{ 4 };
-	constexpr int versionMinor{ 3 };
+	constexpr int versionMinor{ 6 };
 	constexpr int width{ 800 };
 	constexpr int height{ 600 };
 	constexpr std::string_view title{ "FluidSim" };
@@ -37,11 +37,6 @@ int main()
     };
 
 	const glm::vec4 bgColor(0.f, 0.f, 0.f, 1.f);
-	TextureData textureData;
-	//textureData.width = 400;
-	//textureData.height = 400;
-	textureData.pixels = std::vector<uint8_t>(width * height * 3, 0);
-
 	Renderer renderer(bgColor, vertices, indices);
 
 	// input handler setup
@@ -51,7 +46,7 @@ int main()
 	FluidSim fluidSim(width, height);
 
 	// run application
-	app.run(shader, renderer, inputHandler, fluidSim, textureData);
+	app.run(shader, renderer, inputHandler, fluidSim);
 
 	return 0;  
 }

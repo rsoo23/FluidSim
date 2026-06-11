@@ -44,22 +44,31 @@ void ComputeShader::use()
 {
 	glUseProgram(programId);
 	glDispatchCompute(std::ceil(800 / 8), std::ceil(600 / 8), 1);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	//glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
 }
 
-void setValues(std::vector<float>& values)
+void ComputeShader::bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format)
 {
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, 800, 600, 0, GL_RED, GL_FLOAT, values.data());
+	glBindImageTexture(unit, tex, 0, GL_FALSE, 0, access, format);
 }
 
-std::vector<float> get_values() {
-    unsigned int collection_size = 800 * 600;
-    std::vector<float> compute_data(collection_size);
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, compute_data.data());
-    return compute_data;
-}
+void ComputeShader::setFloat(const std::string &name, float value) const
+{ 
+    glUniform1f(glGetUniformLocation(programId, name.c_str()), value); 
+} 
 
-void ComputeShader::checkComputeShaderError(unsigned int shaderId, ShaderType type) const
+void ComputeShader::setVec2(const std::string &name, glm::vec2 v) const
+{ 
+    glUniform2f(glGetUniformLocation(programId, name.c_str()), v.x, v.y); 
+} 
+
+GLuint ComputeShader::getProgramId() const
+{ 
+	return programId;
+} 
+
+void ComputeShader::checkComputeShaderError(GLuint shaderId, ShaderType type) const
 {
 	int success;
 	char infoLog[512];

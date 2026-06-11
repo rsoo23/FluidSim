@@ -36,24 +36,21 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, FluidSim& fluidSim, TextureData& textureData)
+void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, FluidSim& fluidSim)
 {
 	inputHandler.init(m_Window);
 	while (!glfwWindowShouldClose(m_Window))  
 	{  
-		auto mouseDragCoords = inputHandler.getMouseDragCoords();
+		std::optional<glm::vec2> mouseDragCoords = inputHandler.getMouseDragCoords();
 		if (mouseDragCoords) {
-			auto mouseX = (*mouseDragCoords).x;
-			auto mouseY = (*mouseDragCoords).y;
-			auto pixelCoord = ((mouseY * m_ScreenWidth) + mouseX) * 3;
-			//std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";
-			//std::cout << "convert: " << pixelCoord << "\n";
-			textureData.pixels[pixelCoord] = 0;
-			textureData.pixels[pixelCoord + 1] = 0;
-			textureData.pixels[pixelCoord + 2] = 128;
+			float mouseX = (*mouseDragCoords).x;
+			float mouseY = (*mouseDragCoords).y;
+			int pixelCoord = ((mouseY * m_ScreenWidth) + mouseX) * 3;
+			std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";
+			fluidSim.step(glm::vec2(mouseX, mouseY));
+			GLuint finalTex = fluidSim.getFinalTexture();
+			renderer.render(shader, finalTex);
 		}
-		//fluidSim.step();
-		renderer.render(shader, textureData);
 
 		// Swap buffers and poll events  
 		glfwSwapBuffers(m_Window);  
