@@ -66,7 +66,7 @@ void Shader::use()
 	glUseProgram(programId);
 }
 
-void Shader::checkShaderError(unsigned int shaderId, ShaderType type) const
+void Shader::checkShaderError(GLuint shaderId, ShaderType type) const
 {
 	int success;
 	char infoLog[512];

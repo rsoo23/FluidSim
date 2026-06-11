@@ -21,12 +21,12 @@ public:
     void use();
 
 private:
-    unsigned int programId;
+    GLuint programId;
     enum class ShaderType {
         VERTEX,
         FRAGMENT,
         PROGRAM
     };
-    void checkShaderError(unsigned int id, ShaderType type) const;
+    void checkShaderError(GLuint shaderId, ShaderType type) const;
 };
   
