@@ -42,7 +42,7 @@ void FluidSim::step(glm::vec2 mousePos)
 {
 	// add forces
 	//m_AddForceShader.setFloat("deltaTime", m_DeltaTime);
-	m_AddForceShader.bindImageTexture(0, m_VelTexture, GL_WRITE_ONLY, GL_RG32F);
+	m_AddForceShader.bindImageTexture(0, m_VelTexture, GL_READ_WRITE, GL_RG32F);
 	m_AddForceShader.bindImageTexture(1, m_DensTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.use();
 	m_AddForceShader.setVec2("mousePos", mousePos);
