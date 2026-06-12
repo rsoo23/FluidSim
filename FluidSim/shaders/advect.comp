@@ -1,0 +1,52 @@
+#version 460 core
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+layout(r32f, binding = 0) readonly uniform image2D readTexture;
+layout(r32f, binding = 1) writeonly uniform image2D writeTexture;
+layout(r32f, binding = 3) readonly uniform image2D velXTexture;
+layout(r32f, binding = 4) readonly uniform image2D velYTexture;
+
+uniform float screenWidth;
+uniform float screenHeight;
+uniform float deltaTime;
+
+float bilinearSample(ivec2 id, float x, float y, int w, int h) {
+    // Clamp coordinates slightly inside to avoid out-of-bounds access
+    float xClamped = clamp(x, 0.0, float(w) - 1.001);
+    float yClamped = clamp(y, 0.0, float(h) - 1.001);
+
+    int x0 = int(xClamped);
+    int y0 = int(yClamped);
+    int x1 = x0 + 1;
+    int y1 = y0 + 1;
+
+    if (x1 >= w) x1 = w - 1;
+    if (y1 >= h) y1 = h - 1;
+
+    float sx = xClamped - x0;
+    float sy = yClamped - y0;
+
+    // Fetch 4 neighbors
+    float v00 = imageLoad(readTexture, ivec2(x0, y0)).r;
+    float v10 = imageLoad(readTexture, ivec2(x1, y0)).r;
+    float v01 = imageLoad(readTexture, ivec2(x0, y1)).r;
+    float v11 = imageLoad(readTexture, ivec2(x1, y1)).r;
+
+    // Interpolate along x, then y
+    float v0 = v00 * (1.0 - sx) + v10 * sx;
+    float v1 = v01 * (1.0 - sx) + v11 * sx;
+    return v0 * (1.0 - sy) + v1 * sy;
+}
+
+void main() {
+    ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    float val = imageLoad(readTexture, id).r;
+    float velX = imageLoad(velXTexture, id).r;
+    float velY = imageLoad(velYTexture, id).r;
+
+    float pointX = id.x - (velX * deltaTime);
+    float pointY = id.y - (velY * deltaTime);
+
+    float finalVal = bilinearSample(id, pointX, pointY, int(screenWidth), int(screenHeight));
+
+    imageStore(writeTexture, id, vec4(finalVal, 0.0, 0.0, 0.0));
+}

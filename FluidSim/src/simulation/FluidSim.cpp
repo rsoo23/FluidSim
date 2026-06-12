@@ -115,6 +115,15 @@ void FluidSim::step(glm::vec2 mousePos)
 	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
 
 	// advect velocities
+	m_ProjectShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+	m_ProjectShader.bindImageTexture(1, m_VelXTextureNext, GL_WRITE_ONLY, GL_R32F);
+	m_ProjectShader.bindImageTexture(2, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+	m_ProjectShader.bindImageTexture(3, m_VelYTexture, GL_READ_ONLY, GL_R32F);
+	m_ProjectShader.use();
+	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
+	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
+	m_ProjectShader.setFloat("deltaTime", m_DeltaTime);
+
 	// project
 
 	// diffuse densities
