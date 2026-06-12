@@ -49,43 +49,47 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 void FluidSim::step(glm::vec2 mousePos)
 {
 	// add forces
-	//m_AddForceShader.setFloat("deltaTime", m_DeltaTime);
+	addForce(mousePos, glm::vec2(2, 2), 0.25f, 10.f);
+
+	// velocities:
+	// diffuse
+	diffuse(m_VelXTexture, m_VelXTextureNext);
+	diffuse(m_VelYTexture, m_VelYTextureNext);
+	// project
+	project();
+
+	// advect velocities
+	advect(m_VelXTexture, m_VelXTextureNext);
+	advect(m_VelYTexture, m_VelYTextureNext);
+
+	// project
+	project();
+
+	// diffuse densities
+	// advect densities
+
+	// render to texture? return texture values?
+}
+
+void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius)
+{
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(2, m_DensTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.use();
 	m_AddForceShader.setVec2("mousePos", mousePos);
-	m_AddForceShader.setVec2("mouseForce", glm::vec2(2, 2));
-	m_AddForceShader.setFloat("newDens", 0.25f); // density that will be added
-	m_AddForceShader.setFloat("radius", 10.f); // radius of influence
+	m_AddForceShader.setVec2("mouseForce", mouseForce);
+	m_AddForceShader.setFloat("newDens", newDens); // density that will be added
+	m_AddForceShader.setFloat("radius", radius); // radius of influence
+}
 
-	// diffuse velocities
-	for (int i = 0; i < m_JacobiIterations; ++i)
-	{
-		m_JacobiShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
-		m_JacobiShader.bindImageTexture(1, m_VelXTexture, GL_READ_ONLY, GL_R32F);
-		m_JacobiShader.bindImageTexture(2, m_VelXTextureNext, GL_WRITE_ONLY, GL_R32F);
-		m_JacobiShader.use();
-		m_JacobiShader.setFloat("a", m_A);
-		m_JacobiShader.setFloat("c", m_C);
-		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
-		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
-		std::swap(m_VelXTexture, m_VelXTextureNext);
-	}
-	for (int i = 0; i < m_JacobiIterations; ++i)
-	{
-		m_JacobiShader.bindImageTexture(0, m_VelYTexture, GL_READ_ONLY, GL_R32F);
-		m_JacobiShader.bindImageTexture(1, m_VelYTexture, GL_READ_ONLY, GL_R32F);
-		m_JacobiShader.bindImageTexture(2, m_VelYTextureNext, GL_WRITE_ONLY, GL_R32F);
-		m_JacobiShader.use();
-		m_JacobiShader.setFloat("a", m_A);
-		m_JacobiShader.setFloat("c", m_C);
-		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
-		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
-		std::swap(m_VelYTexture, m_VelYTextureNext);
-	}
+void FluidSim::diffuse(GLuint readTex, GLuint writeTex)
+{
+	jacobiSolve(readTex, readTex, writeTex, m_C);
+}
 
-	// project
+void FluidSim::project()
+{
 	// divergence
 	m_DivergenceShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
 	m_DivergenceShader.bindImageTexture(1, m_VelYTexture, GL_READ_ONLY, GL_R32F);
@@ -94,18 +98,7 @@ void FluidSim::step(glm::vec2 mousePos)
 	m_DivergenceShader.setFloat("screenWidth", m_ScreenWidth);
 	m_DivergenceShader.setFloat("screenHeight", m_ScreenHeight);
 	// solve pressure poisson
-	for (int i = 0; i < m_JacobiIterations; ++i)
-	{
-		m_JacobiShader.bindImageTexture(0, m_DivTexture, GL_READ_ONLY, GL_R32F);
-		m_JacobiShader.bindImageTexture(1, m_PresTexture, GL_READ_ONLY, GL_R32F);
-		m_JacobiShader.bindImageTexture(2, m_PresTextureNext, GL_WRITE_ONLY, GL_R32F);
-		m_JacobiShader.use();
-		m_JacobiShader.setFloat("a", 1.f);
-		m_JacobiShader.setFloat("c", 4.f);
-		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
-		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
-		std::swap(m_PresTexture, m_PresTextureNext);
-	}
+	jacobiSolve(m_DivTexture, m_PresTexture, m_PresTextureNext, 4.f);
 	// subtract pressure gradient for incompressibility
 	m_ProjectShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_ProjectShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
@@ -113,23 +106,35 @@ void FluidSim::step(glm::vec2 mousePos)
 	m_ProjectShader.use();
 	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
 	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
+}
 
-	// advect velocities
-	m_ProjectShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
-	m_ProjectShader.bindImageTexture(1, m_VelXTextureNext, GL_WRITE_ONLY, GL_R32F);
+void FluidSim::advect(GLuint readTex, GLuint writeTex)
+{
+	m_ProjectShader.bindImageTexture(0, readTex, GL_READ_ONLY, GL_R32F);
+	m_ProjectShader.bindImageTexture(1, writeTex, GL_WRITE_ONLY, GL_R32F);
 	m_ProjectShader.bindImageTexture(2, m_VelXTexture, GL_READ_ONLY, GL_R32F);
 	m_ProjectShader.bindImageTexture(3, m_VelYTexture, GL_READ_ONLY, GL_R32F);
 	m_ProjectShader.use();
 	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
 	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
 	m_ProjectShader.setFloat("deltaTime", m_DeltaTime);
+	std::swap(readTex, writeTex);
+}
 
-	// project
-
-	// diffuse densities
-	// advect densities
-
-	// render to texture? return texture values?
+void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float c)
+{
+	for (int i = 0; i < m_JacobiIterations; ++i)
+	{
+		m_JacobiShader.bindImageTexture(0, readTex1, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(1, readTex2, GL_READ_ONLY, GL_R32F);
+		m_JacobiShader.bindImageTexture(2, writeTex, GL_WRITE_ONLY, GL_R32F);
+		m_JacobiShader.use();
+		m_JacobiShader.setFloat("a", m_A);
+		m_JacobiShader.setFloat("c", c);
+		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
+		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
+		std::swap(readTex1, writeTex);
+	}
 }
 
 GLuint FluidSim::generateTexture(int w, int h, GLenum internalFormat)
