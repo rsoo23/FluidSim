@@ -57,16 +57,17 @@ void FluidSim::step(glm::vec2 mousePos)
 	diffuse(m_VelYTexture, m_VelYTextureNext);
 	// project
 	project();
-
 	// advect velocities
 	advect(m_VelXTexture, m_VelXTextureNext);
 	advect(m_VelYTexture, m_VelYTextureNext);
-
 	// project
 	project();
 
-	// diffuse densities
-	// advect densities
+	// densities:
+	// diffuse
+	diffuse(m_DensTexture, m_DensTextureNext);
+	// advect
+	advect(m_DensTexture, m_DensTextureNext);
 
 	// render to texture? return texture values?
 }
