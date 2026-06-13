@@ -25,8 +25,8 @@ void main() {
     float velY = imageLoad(velYTexture, id).r;
     float dens = imageLoad(densTexture, id).r;
 
-    velX += mouseForce * falloff;
-    velY += mouseForce * falloff;
+    velX += mouseForce.x * falloff;
+    velY += mouseForce.y * falloff;
     dens += newDens * falloff;
 
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));
