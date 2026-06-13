@@ -141,7 +141,7 @@ void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex,
 		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
 		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
 		m_JacobiShader.dispatch();
-		std::swap(readTex1, writeTex);
+		std::swap(readTex2, writeTex);
 	}
 }
 
