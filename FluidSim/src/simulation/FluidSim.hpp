@@ -27,8 +27,8 @@ private:
 	void advect(GLuint readTex, GLuint writeTex, bool isFinalStep);
 	void jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float c);
 
-	int m_ScreenWidth;
-	int m_ScreenHeight;
+	float m_ScreenWidth;
+	float m_ScreenHeight;
 	float m_DiffuseFactor;
 	float m_Viscosity;
 	float m_DeltaTime;
