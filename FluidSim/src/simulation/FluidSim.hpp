@@ -15,7 +15,7 @@ public:
 	FluidSim(FluidSim&&)					= delete;
 	FluidSim& operator=(FluidSim&&)			= delete;
 
-	void step(glm::vec2 mousePos, glm::vec2 mouseDir);
+	void step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir);
 
 	GLuint generateTexture();
 	void setEmptyTexture(GLuint texId);
@@ -24,23 +24,20 @@ public:
 
 private:
 	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius);
-	void diffuse(GLuint& readTex, GLuint& writeTex, float diffuseCoeff);
+	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);
 	void project();
-	void advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep);
+	void advect(GLuint& readTex, GLuint& writeTex, float deltaTime, bool isFinalStep);
 	void jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex, float a, float c);
 
 	// constants used for projection
 	static constexpr float PROJECT_A = 1.f;
 	static constexpr float PROJECT_C = 4.f;
 
-	// precalculated constants
-	float m_DiffusionStep;
-	float m_ViscosityStep;
-
 	unsigned int m_ScreenWidth;
 	unsigned int m_ScreenHeight;
 	unsigned int m_JacobiIterations;
-	float m_DeltaTime;
+	float m_DiffusionCoeff;
+	float m_ViscosityCoeff;
 
 	// Velocity
 	GLuint m_VelXTexture, m_VelXTextureNext;

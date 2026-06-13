@@ -6,9 +6,8 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	m_ScreenWidth(screenWidth),
 	m_ScreenHeight(screenHeight),
 	m_JacobiIterations(jacobiIterations),
-	m_DeltaTime(1.f / 60.f),
-	m_DiffusionStep(0.1f * m_DeltaTime),
-	m_ViscosityStep(0.7f * m_DeltaTime)
+	m_DiffusionCoeff(0.1f),
+	m_ViscosityCoeff(0.7f)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -43,28 +42,28 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
-void FluidSim::step(glm::vec2 mousePos, glm::vec2 mouseDir)
+void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 {
 	// add forces
 	addForce(mousePos, mouseDir, 0.25f, 10.f);
 
 	// velocities:
 	// diffuse
-	diffuse(m_VelXTexture, m_VelXTextureNext, m_ViscosityStep);
-	diffuse(m_VelYTexture, m_VelYTextureNext, m_ViscosityStep);
+	diffuse(m_VelXTexture, m_VelXTextureNext, m_ViscosityCoeff, deltaTime);
+	diffuse(m_VelYTexture, m_VelYTextureNext, m_ViscosityCoeff, deltaTime);
 	// project
 	project();
 	// advect velocities
-	advect(m_VelXTexture, m_VelXTextureNext, false);
-	advect(m_VelYTexture, m_VelYTextureNext, false);
+	advect(m_VelXTexture, m_VelXTextureNext, deltaTime, false);
+	advect(m_VelYTexture, m_VelYTextureNext, deltaTime, false);
 	// project
 	project();
 
 	// densities:
 	// diffuse
-	diffuse(m_DensTexture, m_DensTextureNext, m_DiffusionStep);
+	diffuse(m_DensTexture, m_DensTextureNext, m_DiffusionCoeff, deltaTime);
 	// advect
-	advect(m_DensTexture, m_DensTextureNext, true);
+	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
 }
 
 void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius)
@@ -87,9 +86,11 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens,
 // swap velnext and vel2
 // x
 
-void FluidSim::diffuse(GLuint& readTex, GLuint& writeTex, float diffuseCoeff)
+void FluidSim::diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime)
 {
-	jacobiSolve(readTex, readTex, writeTex, diffuseCoeff, 1.f + 4.f * diffuseCoeff);
+	float a{ coeff * deltaTime };
+	float c{ 1.f + 4.f * a };
+	jacobiSolve(readTex, readTex, writeTex, a, c);
 }
 
 void FluidSim::project()
@@ -114,7 +115,7 @@ void FluidSim::project()
 	m_ProjectShader.dispatch();
 }
 
-void FluidSim::advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep)
+void FluidSim::advect(GLuint& readTex, GLuint& writeTex, float deltaTime, bool isFinalStep)
 {
 	m_AdvectShader.bindImageTexture(0, readTex, GL_READ_ONLY, GL_R32F);
 	m_AdvectShader.bindImageTexture(1, writeTex, GL_WRITE_ONLY, GL_R32F);
@@ -123,7 +124,7 @@ void FluidSim::advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep)
 	m_AdvectShader.use();
 	m_AdvectShader.setUint("screenWidth", m_ScreenWidth);
 	m_AdvectShader.setUint("screenHeight", m_ScreenHeight);
-	m_AdvectShader.setFloat("deltaTime", m_DeltaTime);
+	m_AdvectShader.setFloat("deltaTime", deltaTime);
 	if (isFinalStep)
 	{
 		m_AdvectShader.dispatchFinal();

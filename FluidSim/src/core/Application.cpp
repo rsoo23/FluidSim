@@ -40,9 +40,16 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 
 void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, FluidSim& fluidSim)
 {
+	GLfloat deltaTime{ 0.f };
+	GLfloat prevFrame{ 0.f };
+
 	inputHandler.init(m_Window);
 	while (!glfwWindowShouldClose(m_Window))  
 	{  
+		GLfloat currFrame = glfwGetTime();
+		deltaTime = currFrame - prevFrame;
+		prevFrame = currFrame;
+
 		std::optional<glm::vec2> mouseDragCoords = inputHandler.getMouseDragCoords();
 		std::optional<glm::vec2> mouseDragDir = inputHandler.getMouseDragDir();
 
@@ -53,10 +60,11 @@ void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHan
 			float mouseDirX = (*mouseDragDir).x;
 			float mouseDirY = (*mouseDragDir).y;
 
+			std::cout << "delt" << deltaTime << "\n";
 			std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";
 			std::cout << "dirx: " << mouseDirX << ", diry: " << mouseDirY << "\n\n";
 
-			fluidSim.step(*mouseDragCoords, *mouseDragDir);
+			fluidSim.step(static_cast<float>(deltaTime), *mouseDragCoords, *mouseDragDir);
 
 			GLuint finalTex = fluidSim.getFinalTexture();
 			renderer.render(shader, finalTex);
