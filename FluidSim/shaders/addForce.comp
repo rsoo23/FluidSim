@@ -8,6 +8,7 @@ uniform vec2 mousePos;
 uniform vec2 mouseForce;
 uniform float densityIncrement;
 uniform float cursorRadius;
+uniform float deltaTime;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
@@ -25,8 +26,8 @@ void main() {
     float velY = imageLoad(velYTexture, id).r;
     float dens = imageLoad(densTexture, id).r;
 
-    velX += mouseForce.x * falloff;
-    velY += mouseForce.y * falloff;
+    velX += mouseForce.x * falloff * deltaTime;
+    velY += mouseForce.y * falloff * deltaTime;
     dens += densityIncrement * falloff;
 
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));

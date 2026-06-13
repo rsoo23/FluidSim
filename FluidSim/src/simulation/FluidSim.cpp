@@ -57,7 +57,7 @@ FluidSim::FluidSim(
 void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 {
 	// add forces
-	addForce(mousePos, mouseDir);
+	addForce(mousePos, mouseDir, deltaTime);
 
 	vorticityConfine(deltaTime);
 
@@ -80,7 +80,7 @@ void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
 }
 
-void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce)
+void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTime)
 {
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
