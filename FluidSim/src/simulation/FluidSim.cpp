@@ -40,7 +40,6 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	// compute shader setup
 	m_AddForceShader	= ComputeShader{ R"(shaders\addForce.comp)" };
 	m_AdvectShader		= ComputeShader{ R"(shaders\advect.comp)" };
-	m_DiffuseShader		= ComputeShader{ R"(shaders\diffuse.comp)" };
 	m_JacobiShader		= ComputeShader{ R"(shaders\jacobi.comp)" };
 	m_ProjectShader		= ComputeShader{ R"(shaders\project.comp)" };
 	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)" };
