@@ -12,7 +12,7 @@ uniform float screenHeight;
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
     float val1 = imageLoad(readTexture1, id).r;
-    float val2 = imageLoad(readTexture1, id).r;
+    float val2 = imageLoad(readTexture2, id).r;
 
     ivec2 coordLeft     = id + ivec2(-1, 0);
     ivec2 coordRight    = id + ivec2(1, 0);
