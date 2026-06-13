@@ -12,7 +12,8 @@ public:
 	ComputeShader& operator=(ComputeShader&&)		= default;
 
     void use();
-    void useFinal();
+    void dispatch();
+    void dispatchFinal();
 
     void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
 

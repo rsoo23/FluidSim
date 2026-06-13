@@ -79,6 +79,7 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens,
 	m_AddForceShader.setVec2("mouseForce", mouseForce);
 	m_AddForceShader.setFloat("newDens", newDens); // density that will be added
 	m_AddForceShader.setFloat("radius", radius); // radius of influence
+	m_AddForceShader.dispatch();
 }
 
 void FluidSim::diffuse(GLuint readTex, GLuint writeTex)
@@ -95,6 +96,7 @@ void FluidSim::project()
 	m_DivergenceShader.use();
 	m_DivergenceShader.setFloat("screenWidth", m_ScreenWidth);
 	m_DivergenceShader.setFloat("screenHeight", m_ScreenHeight);
+	m_DivergenceShader.dispatch();
 	// solve pressure poisson
 	jacobiSolve(m_DivTexture, m_PresTexture, m_PresTextureNext, 4.f);
 	// subtract pressure gradient for incompressibility
@@ -104,18 +106,27 @@ void FluidSim::project()
 	m_ProjectShader.use();
 	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
 	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
+	m_ProjectShader.dispatch();
 }
 
-void FluidSim::advect(GLuint readTex, GLuint writeTex)
+void FluidSim::advect(GLuint readTex, GLuint writeTex, bool isFinalStep)
 {
-	m_ProjectShader.bindImageTexture(0, readTex, GL_READ_ONLY, GL_R32F);
-	m_ProjectShader.bindImageTexture(1, writeTex, GL_WRITE_ONLY, GL_R32F);
-	m_ProjectShader.bindImageTexture(2, m_VelXTexture, GL_READ_ONLY, GL_R32F);
-	m_ProjectShader.bindImageTexture(3, m_VelYTexture, GL_READ_ONLY, GL_R32F);
-	m_ProjectShader.use();
-	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
-	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
-	m_ProjectShader.setFloat("deltaTime", m_DeltaTime);
+	m_AdvectShader.bindImageTexture(0, readTex, GL_READ_ONLY, GL_R32F);
+	m_AdvectShader.bindImageTexture(1, writeTex, GL_WRITE_ONLY, GL_R32F);
+	m_AdvectShader.bindImageTexture(2, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+	m_AdvectShader.bindImageTexture(3, m_VelYTexture, GL_READ_ONLY, GL_R32F);
+	m_AdvectShader.use();
+	m_AdvectShader.setFloat("screenWidth", m_ScreenWidth);
+	m_AdvectShader.setFloat("screenHeight", m_ScreenHeight);
+	m_AdvectShader.setFloat("deltaTime", m_DeltaTime);
+	if (isFinalStep)
+	{
+		m_AdvectShader.dispatchFinal();
+	}
+	else
+{
+		m_AdvectShader.dispatch();
+	}
 	std::swap(readTex, writeTex);
 }
 
@@ -131,6 +142,7 @@ void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, fl
 		m_JacobiShader.setFloat("c", c);
 		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
 		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
+		m_JacobiShader.dispatch();
 		std::swap(readTex1, writeTex);
 	}
 }

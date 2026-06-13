@@ -43,14 +43,17 @@ ComputeShader::ComputeShader(const std::filesystem::path& path)
 void ComputeShader::use()
 {
 	glUseProgram(programId);
-	glDispatchCompute(std::ceil(800 / 8), std::ceil(600 / 8), 1);
+}
+
+void ComputeShader::dispatch()
+{
+	glDispatchCompute(std::ceil(static_cast<float>(800) / static_cast<float>(8)), std::ceil(static_cast<float>(600) / static_cast<float>(8)), 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
 
-void ComputeShader::useFinal()
+void ComputeShader::dispatchFinal()
 {
-	glUseProgram(programId);
-	glDispatchCompute(std::ceil(800 / 8), std::ceil(600 / 8), 1);
+	glDispatchCompute(std::ceil(static_cast<float>(800) / static_cast<float>(8)), std::ceil(static_cast<float>(600) / static_cast<float>(8)), 1);
 	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
 }
 
