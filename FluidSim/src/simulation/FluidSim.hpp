@@ -50,6 +50,8 @@ private:
 	GLuint m_DivTexture;
 	// Density
 	GLuint m_DensTexture, m_DensTextureNext;
+	// Curl 
+	GLuint m_CurlTexture;
 	// Compute Shader
-	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader;
+	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_CurlShader;
 };

@@ -1,0 +1,29 @@
+#version 460 core
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+layout(r32f, binding = 0) readonly uniform image2D velXTexture;
+layout(r32f, binding = 1) readonly uniform image2D velYTexture;
+layout(r32f, binding = 2) writeonly uniform image2D curlTexture;
+
+uniform uint screenWidth;
+uniform uint screenHeight;
+
+void main() {
+    ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    float velX = imageLoad(velXTexture, id).r;
+    float velY = imageLoad(velYTexture, id).r;
+
+    ivec2 coordLeft     = id + ivec2(-1, 0);
+    ivec2 coordRight    = id + ivec2(1, 0);
+    ivec2 coordUp       = id + ivec2(0, -1);
+    ivec2 coordDown     = id + ivec2(0, 1);
+
+    float upX    = id.y > 0                  ? imageLoad(velXTexture, coordUp).r    : velX;
+    float downX  = id.y < screenHeight - 1   ? imageLoad(velXTexture, coordDown).r  : velX;
+    float leftY  = id.x > 0                  ? imageLoad(velYTexture, coordLeft).r  : velY;
+    float rightY = id.x < screenWidth - 1    ? imageLoad(velYTexture, coordRight).r : velY;
+
+    float finalCurl = 0.5 * ((rightY - leftY) - (downX - upX));
+
+    imageStore(curlTexture, id, vec4(finalCurl, 0.0, 0.0, 0.0));
+}
+

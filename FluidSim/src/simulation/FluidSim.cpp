@@ -25,6 +25,8 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	m_DensTexture		= generateTexture();
 	m_DensTextureNext	= generateTexture();
 
+	m_CurlTexture		= generateTexture();
+
 	// fill textures with 0
 	setEmptyTexture(m_VelXTexture);
 	setEmptyTexture(m_VelXTextureNext);
@@ -35,6 +37,7 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	setEmptyTexture(m_DivTexture);
 	setEmptyTexture(m_DensTexture);
 	setEmptyTexture(m_DensTextureNext);
+	setEmptyTexture(m_CurlTexture);
 
 	// compute shader setup
 	m_AddForceShader	= ComputeShader{ R"(shaders\addForce.comp)", m_ScreenWidth, m_ScreenHeight };
@@ -42,6 +45,7 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	m_JacobiShader		= ComputeShader{ R"(shaders\jacobi.comp)", m_ScreenWidth, m_ScreenHeight };
 	m_ProjectShader		= ComputeShader{ R"(shaders\project.comp)", m_ScreenWidth, m_ScreenHeight };
 	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_CurlShader		= ComputeShader{ R"(shaders\curl.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
 void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
