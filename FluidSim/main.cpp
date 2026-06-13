@@ -30,11 +30,13 @@ int main()
 
 	const glm::vec4 bgColor(0.f, 0.f, 0.f, 1.f);
 
-	constexpr unsigned int jacobiIterations{ 20u };
-	constexpr float diffusionCoeff{ 0.5f };
-	constexpr float viscosityCoeff{ 0.2f };
+	constexpr unsigned int jacobiIterations{ 40u };
+	constexpr float diffusionCoeff{ 2.f };
+	constexpr float viscosityCoeff{ 0.25f };
 	constexpr float densityIncrement{ 0.2f };
 	constexpr float cursorRadius{ 10.f };
+
+	constexpr float vorticityCoeff{ 40.f };
 
 	Application app(versionMajor, versionMinor, width, height, "FluidSim");
 
@@ -42,7 +44,7 @@ int main()
 
 	Renderer renderer(bgColor, vertices, indices);
 
-	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, densityIncrement, cursorRadius);
+	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, densityIncrement, cursorRadius, vorticityCoeff);
 
 	app.run(shader, renderer, fluidSim);
 

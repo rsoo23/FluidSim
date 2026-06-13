@@ -2,14 +2,24 @@
 #include "FluidSim.hpp"
 #include "shader/ComputeShader.hpp"
 
-FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations, float diffusionCoeff, float viscosityCoeff, float densityIncrement, float cursorRadius):
+FluidSim::FluidSim(
+	unsigned int screenWidth,
+	unsigned int screenHeight,
+	unsigned int jacobiIterations,
+	float diffusionCoeff,
+	float viscosityCoeff,
+	float densityIncrement,
+	float cursorRadius,
+	float vorticityCoeff
+):
 	m_ScreenWidth(screenWidth),
 	m_ScreenHeight(screenHeight),
 	m_JacobiIterations(jacobiIterations),
 	m_DiffusionCoeff(diffusionCoeff),
 	m_ViscosityCoeff(viscosityCoeff),
 	m_DensityIncrement(densityIncrement),
-	m_CursorRadius(cursorRadius)
+	m_CursorRadius(cursorRadius),
+	m_VorticityCoeff(vorticityCoeff)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -25,8 +35,6 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	m_DensTexture		= generateTexture();
 	m_DensTextureNext	= generateTexture();
 
-	m_CurlTexture		= generateTexture();
-
 	// fill textures with 0
 	setEmptyTexture(m_VelXTexture);
 	setEmptyTexture(m_VelXTextureNext);
@@ -36,22 +44,22 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 	setEmptyTexture(m_PresTextureNext);
 	setEmptyTexture(m_DivTexture);
 	setEmptyTexture(m_DensTexture);
-	setEmptyTexture(m_DensTextureNext);
-	setEmptyTexture(m_CurlTexture);
 
 	// compute shader setup
-	m_AddForceShader	= ComputeShader{ R"(shaders\addForce.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_AdvectShader		= ComputeShader{ R"(shaders\advect.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_JacobiShader		= ComputeShader{ R"(shaders\jacobi.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_ProjectShader		= ComputeShader{ R"(shaders\project.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_CurlShader		= ComputeShader{ R"(shaders\curl.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_AddForceShader			= ComputeShader{ R"(shaders\addForce.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_AdvectShader				= ComputeShader{ R"(shaders\advect.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_JacobiShader				= ComputeShader{ R"(shaders\jacobi.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_ProjectShader				= ComputeShader{ R"(shaders\project.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_DivergenceShader			= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_VorticityConfineShader	= ComputeShader{ R"(shaders\vorticityConfine.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
 void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 {
 	// add forces
 	addForce(mousePos, mouseDir);
+
+	vorticityConfine(deltaTime);
 
 	// velocities:
 	// diffuse
@@ -83,6 +91,18 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce)
 	m_AddForceShader.setFloat("densityIncrement", m_DensityIncrement);
 	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
 	m_AddForceShader.dispatch();
+}
+
+void FluidSim::vorticityConfine(float deltaTime)
+{
+	m_VorticityConfineShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
+	m_VorticityConfineShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
+	m_VorticityConfineShader.use();
+	m_DivergenceShader.setUint("screenWidth", m_ScreenWidth);
+	m_DivergenceShader.setUint("screenHeight", m_ScreenHeight);
+	m_VorticityConfineShader.setFloat("vorticity", m_VorticityCoeff);
+	m_VorticityConfineShader.setFloat("deltaTime", deltaTime);
+	m_VorticityConfineShader.dispatch();
 }
 
 // jacobi(vel1, velnext, vel2)

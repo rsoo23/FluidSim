@@ -5,7 +5,16 @@
 
 class FluidSim {
 public:
-	FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations, float diffusionCoeff, float viscosityCoeff, float densityIncrement, float cursorRadius);
+	FluidSim(
+		unsigned int screenWidth,
+		unsigned int screenHeight,
+		unsigned int jacobiIterations,
+		float diffusionCoeff,
+		float viscosityCoeff,
+		float densityIncrement,
+		float cursorRadius,
+		float vorticityCoeff
+	);
 
 	~FluidSim()								= default;
 
@@ -24,6 +33,7 @@ public:
 
 private:
 	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce);
+	void vorticityConfine(float deltaTime);
 	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);
 	void project();
 	void advect(GLuint& readTex, GLuint& writeTex, float deltaTime, bool isFinalStep);
@@ -40,6 +50,7 @@ private:
 	float m_ViscosityCoeff;
 	float m_DensityIncrement;
 	float m_CursorRadius;
+	float m_VorticityCoeff;
 
 	// Velocity
 	GLuint m_VelXTexture, m_VelXTextureNext;
@@ -53,5 +64,5 @@ private:
 	// Curl 
 	GLuint m_CurlTexture;
 	// Compute Shader
-	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_CurlShader;
+	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_VorticityConfineShader;
 };

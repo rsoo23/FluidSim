@@ -1,0 +1,56 @@
+#version 460 core
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+layout(r32f, binding = 0) uniform image2D velXTexture;
+layout(r32f, binding = 1) uniform image2D velYTexture;
+
+uniform uint screenWidth;
+uniform uint screenHeight;
+uniform float vorticity;
+uniform float deltaTime;
+
+float curl(ivec2 id, float velX, float velY) {
+    ivec2 coordLeft     = id + ivec2(-1, 0);
+    ivec2 coordRight    = id + ivec2(1, 0);
+    ivec2 coordUp       = id + ivec2(0, -1);
+    ivec2 coordDown     = id + ivec2(0, 1);
+
+    float upX    = id.y > 0                  ? imageLoad(velXTexture, coordUp).r    : velX;
+    float downX  = id.y < screenHeight - 1   ? imageLoad(velXTexture, coordDown).r  : velX;
+    float leftY  = id.x > 0                  ? imageLoad(velYTexture, coordLeft).r  : velY;
+    float rightY = id.x < screenWidth - 1    ? imageLoad(velYTexture, coordRight).r : velY;
+
+    float curl = 0.5 * ((rightY - leftY) - (downX - upX));
+    return curl;
+}
+
+void main() {
+    ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    float velX = imageLoad(velXTexture, id).r;
+    float velY = imageLoad(velYTexture, id).r;
+
+    ivec2 coordLeft     = id + ivec2(-1, 0);
+    ivec2 coordRight    = id + ivec2(1, 0);
+    ivec2 coordUp       = id + ivec2(0, -1);
+    ivec2 coordDown     = id + ivec2(0, 1);
+
+    // vorticity gradient components:
+    float nX = abs(curl(coordRight, velX, velY)) - abs(curl(coordLeft, velX, velY));
+    float nY = abs(curl(coordDown, velX, velY)) - abs(curl(coordUp, velX, velY));
+    
+    // calculate normalized components:
+    float epsilon = 1e-5; // prevent division by 0
+    float length = sqrt(pow(nX, 2) + pow(nY, 2)) + epsilon;
+    float normalizedNX = nX / length;
+    float normalizedNY = nY / length;
+    
+    // calculate force
+    float forceX = normalizedNY * curl(id, velX, velY) * vorticity;
+    float forceY = -normalizedNX * curl(id, velX, velY) * vorticity;
+
+    float finalVelX = velX + deltaTime * forceX;
+    float finalVelY = velY + deltaTime * forceY;
+
+    imageStore(velXTexture, id, vec4(finalVelX, 0.0, 0.0, 0.0));
+    imageStore(velYTexture, id, vec4(finalVelY, 0.0, 0.0, 0.0));
+}
+
