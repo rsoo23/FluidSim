@@ -4,7 +4,7 @@
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
 
-Application::Application(int versionMajor, int versionMinor, int width, int height, std::string_view title) : m_ScreenWidth(width), m_ScreenHeight(height)
+Application::Application(int versionMajor, int versionMinor, int width, int height, const std::string& title) : m_ScreenWidth(width), m_ScreenHeight(height)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);  
@@ -12,7 +12,7 @@ Application::Application(int versionMajor, int versionMinor, int width, int heig
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	m_Window = glfwCreateWindow(width, height, "FluidSim", NULL, NULL);  
+	m_Window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 
 	if (m_Window == NULL)  
 	{  

@@ -11,9 +11,8 @@ int main()
 	constexpr int versionMinor{ 6 };
 	constexpr int width{ 800 };
 	constexpr int height{ 600 };
-	constexpr std::string_view title{ "FluidSim" };
 
-	Application app(versionMajor, versionMinor, width, height, title);
+	Application app(versionMajor, versionMinor, width, height, "FluidSim");
 
 	// shader setup
 	std::filesystem::path vertexRelPath{ R"(shaders\shader.vert)" };

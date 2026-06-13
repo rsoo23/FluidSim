@@ -7,7 +7,7 @@
 
 class Application {
 public:
-	Application(int versionMajor, int versionMinor, int width, int height, std::string_view title);
+	Application(int versionMajor, int versionMinor, int width, int height, const std::string& title);
 	~Application();
 
 	Application()								= delete;
