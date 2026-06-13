@@ -43,10 +43,10 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)" };
 }
 
-void FluidSim::step(glm::vec2 mousePos)
+void FluidSim::step(glm::vec2 mousePos, glm::vec2 mouseDir)
 {
 	// add forces
-	addForce(mousePos, glm::vec2(2, 2), 0.25f, 10.f);
+	addForce(mousePos, mouseDir, 0.25f, 10.f);
 
 	// velocities:
 	// diffuse

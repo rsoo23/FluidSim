@@ -2,7 +2,14 @@
 #include "InputHandler.hpp"
 
 
-InputHandler::InputHandler() : m_IsDragging(false), m_MouseXPos(0), m_MouseYPos(0) {}
+InputHandler::InputHandler() :
+	m_IsDragging(true),
+	m_MouseXPosPrev(0),
+	m_MouseYPosPrev(0),
+	m_MouseXPosCurr(0),
+	m_MouseYPosCurr(0),
+	m_MouseDirX(0),
+	m_MouseDirY(0) {}
 
 void InputHandler::init(GLFWwindow* window)
 {
@@ -17,25 +24,18 @@ std::optional<glm::vec2> InputHandler::getMouseDragCoords() const
 {
 	if (m_IsDragging)
 	{
-		return glm::vec2(m_MouseXPos, m_MouseYPos);
+		return glm::vec2(m_MouseXPosCurr, m_MouseYPosCurr);
 	}
 	return std::nullopt;
 }
 
-void InputHandler::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+std::optional<glm::vec2> InputHandler::getMouseDragDir() const
 {
-	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	if (m_IsDragging)
 	{
-		if (action == GLFW_PRESS)
-		{
-			handler->m_IsDragging = true;
-		}
-		else if (action == GLFW_RELEASE)
-		{
-			handler->m_IsDragging = false;
-		}
+		return glm::vec2(m_MouseDirX, m_MouseDirY);
 	}
+	return std::nullopt;
 }
 
 void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
@@ -43,7 +43,15 @@ void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, doubl
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 	if (handler->m_IsDragging)
 	{
-		glfwGetCursorPos(window, &handler->m_MouseXPos, &handler->m_MouseYPos);
+		handler->m_MouseXPosCurr = xPos;
+		handler->m_MouseYPosCurr = yPos;
+
+		handler->m_MouseDirX = xPos - handler->m_MouseXPosPrev;
+		handler->m_MouseDirY = yPos - handler->m_MouseYPosPrev;
+	}
+	handler->m_MouseXPosPrev = xPos;
+	handler->m_MouseYPosPrev = yPos;
+}
 	}
 }
 

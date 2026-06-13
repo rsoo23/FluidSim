@@ -14,7 +14,7 @@ public:
 	FluidSim(FluidSim&&)					= delete;
 	FluidSim& operator=(FluidSim&&)			= delete;
 
-	void step(glm::vec2 mousePos);
+	void step(glm::vec2 mousePos, glm::vec2 mouseDir);
 
 	GLuint generateTexture(int w, int h, GLenum internalFormat);
 

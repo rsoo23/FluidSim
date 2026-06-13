@@ -42,12 +42,20 @@ void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHan
 	while (!glfwWindowShouldClose(m_Window))  
 	{  
 		std::optional<glm::vec2> mouseDragCoords = inputHandler.getMouseDragCoords();
-		if (mouseDragCoords) {
+		std::optional<glm::vec2> mouseDragDir = inputHandler.getMouseDragDir();
+
+		if (mouseDragCoords && mouseDragDir) {
 			float mouseX = (*mouseDragCoords).x;
 			float mouseY = (*mouseDragCoords).y;
-			int pixelCoord = ((mouseY * m_ScreenWidth) + mouseX) * 3;
+
+			float mouseDirX = (*mouseDragDir).x;
+			float mouseDirY = (*mouseDragDir).y;
+
 			std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";
-			fluidSim.step(glm::vec2(mouseX, mouseY));
+			std::cout << "dirx: " << mouseDirX << ", diry: " << mouseDirY << "\n\n";
+
+			fluidSim.step(*mouseDragCoords, *mouseDragDir);
+
 			GLuint finalTex = fluidSim.getFinalTexture();
 			renderer.render(shader, finalTex);
 		}

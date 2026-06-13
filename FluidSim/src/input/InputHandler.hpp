@@ -17,11 +17,16 @@ public:
 	void init(GLFWwindow* window);
 
 	std::optional<glm::vec2> getMouseDragCoords() const;
+	std::optional<glm::vec2> getMouseDragDir() const;
 
 private:
 	static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 	bool m_IsDragging;
-	double m_MouseXPos;
-	double m_MouseYPos;
+	double m_MouseXPosPrev;
+	double m_MouseYPosPrev;
+	double m_MouseXPosCurr;
+	double m_MouseYPosCurr;
+	double m_MouseDirX;
+	double m_MouseDirY;
 };
