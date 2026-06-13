@@ -6,7 +6,8 @@
 class FluidSim {
 public:
 	FluidSim(int screenWidth, int screenHeight);
-	~FluidSim();
+
+	~FluidSim()								= default;
 
 	FluidSim()								= delete;
 	FluidSim(const FluidSim&)				= delete;

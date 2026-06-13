@@ -51,7 +51,3 @@ void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, doubl
 	handler->m_MouseXPosPrev = xPos;
 	handler->m_MouseYPosPrev = yPos;
 }
-	}
-}
-
-InputHandler::~InputHandler() {}

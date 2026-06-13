@@ -170,5 +170,3 @@ GLuint FluidSim::getFinalTexture() const
 {
 	return m_DensTexture;
 }
-
-FluidSim::~FluidSim() {}

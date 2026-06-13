@@ -7,7 +7,8 @@
 class InputHandler {
 public:
 	InputHandler();
-	~InputHandler();
+
+	~InputHandler()									= default;
 
 	InputHandler(const InputHandler&)				= delete;
 	InputHandler& operator=(const InputHandler&)	= delete;

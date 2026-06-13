@@ -6,10 +6,12 @@ public:
     ComputeShader(const std::filesystem::path& path);
 
 	ComputeShader()                 				= default;
+	ComputeShader& operator=(ComputeShader&&)		= default;
+    ~ComputeShader()                                = default;
+
 	ComputeShader(const ComputeShader&)				= delete;
 	ComputeShader& operator=(const ComputeShader&)  = delete;
 	ComputeShader(ComputeShader&&)					= delete;
-	ComputeShader& operator=(ComputeShader&&)		= default;
 
     void use();
     void dispatch();

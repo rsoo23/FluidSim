@@ -5,6 +5,8 @@ class Shader
 public:
     Shader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath);
 
+    ~Shader()                           = default;
+
 	Shader()                 			= delete;
 	Shader(const Shader&)				= delete;
 	Shader& operator=(const Shader&)	= delete;
