@@ -7,8 +7,8 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_ScreenHeight(static_cast<float>(screenHeight)),
 	m_DeltaTime(1 / 60),
 	m_JacobiIterations(20),
-	m_A(m_DiffuseFactor * m_DeltaTime),
-	m_C(1.f * 4.f * m_A)
+	m_DiffusionStep(0.01f * m_DeltaTime),
+	m_ViscosityStep(0.01f * m_DeltaTime)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture(800, 600, GL_R32F);
@@ -50,8 +50,8 @@ void FluidSim::step(glm::vec2 mousePos)
 
 	// velocities:
 	// diffuse
-	diffuse(m_VelXTexture, m_VelXTextureNext);
-	diffuse(m_VelYTexture, m_VelYTextureNext);
+	diffuse(m_VelXTexture, m_VelXTextureNext, m_ViscosityStep);
+	diffuse(m_VelYTexture, m_VelYTextureNext, m_ViscosityStep);
 	// project
 	project();
 	// advect velocities
@@ -62,7 +62,7 @@ void FluidSim::step(glm::vec2 mousePos)
 
 	// densities:
 	// diffuse
-	diffuse(m_DensTexture, m_DensTextureNext);
+	diffuse(m_DensTexture, m_DensTextureNext, m_DiffusionStep);
 	// advect
 	advect(m_DensTexture, m_DensTextureNext, true);
 }
@@ -80,9 +80,9 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens,
 	m_AddForceShader.dispatch();
 }
 
-void FluidSim::diffuse(GLuint readTex, GLuint writeTex)
+void FluidSim::diffuse(GLuint readTex, GLuint writeTex, float diffuseCoeff)
 {
-	jacobiSolve(readTex, readTex, writeTex, m_C);
+	jacobiSolve(readTex, readTex, writeTex, diffuseCoeff, 1.f + 4.f * diffuseCoeff);
 }
 
 void FluidSim::project()
@@ -96,7 +96,7 @@ void FluidSim::project()
 	m_DivergenceShader.setFloat("screenHeight", m_ScreenHeight);
 	m_DivergenceShader.dispatch();
 	// solve pressure poisson
-	jacobiSolve(m_DivTexture, m_PresTexture, m_PresTextureNext, 4.f);
+	jacobiSolve(m_DivTexture, m_PresTexture, m_PresTextureNext, PROJECT_A, PROJECT_C);
 	// subtract pressure gradient for incompressibility
 	m_ProjectShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_ProjectShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
@@ -129,6 +129,7 @@ void FluidSim::advect(GLuint readTex, GLuint writeTex, bool isFinalStep)
 }
 
 void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float c)
+void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float a, float c)
 {
 	for (int i = 0; i < m_JacobiIterations; ++i)
 	{
@@ -136,7 +137,7 @@ void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, fl
 		m_JacobiShader.bindImageTexture(1, readTex2, GL_READ_ONLY, GL_R32F);
 		m_JacobiShader.bindImageTexture(2, writeTex, GL_WRITE_ONLY, GL_R32F);
 		m_JacobiShader.use();
-		m_JacobiShader.setFloat("a", m_A);
+		m_JacobiShader.setFloat("a", a);
 		m_JacobiShader.setFloat("c", c);
 		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
 		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
