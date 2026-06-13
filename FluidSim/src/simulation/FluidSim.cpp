@@ -34,6 +34,8 @@ FluidSim::FluidSim(
 	m_DensTexture		= generateTexture();
 	m_DensTextureNext	= generateTexture();
 
+	m_CurlTexture		= generateTexture();
+
 	// fill textures with 0
 	setEmptyTexture(m_VelXTexture);
 	setEmptyTexture(m_VelXTextureNext);
@@ -43,6 +45,7 @@ FluidSim::FluidSim(
 	setEmptyTexture(m_PresTextureNext);
 	setEmptyTexture(m_DivTexture);
 	setEmptyTexture(m_DensTexture);
+	setEmptyTexture(m_CurlTexture);
 
 	// compute shader setup
 	m_AddForceShader			= ComputeShader{ R"(shaders\addForce.comp)", m_ScreenWidth, m_ScreenHeight };
@@ -51,6 +54,7 @@ FluidSim::FluidSim(
 	m_ProjectShader				= ComputeShader{ R"(shaders\project.comp)", m_ScreenWidth, m_ScreenHeight };
 	m_DivergenceShader			= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
 	m_VorticityConfineShader	= ComputeShader{ R"(shaders\vorticityConfine.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_CurlShader				= ComputeShader{ R"(shaders\curl.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
 void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
@@ -58,6 +62,7 @@ void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 	// add forces
 	addForce(mousePos, mouseDir, deltaTime);
 
+	curl();
 	vorticityConfine(deltaTime);
 
 	// velocities:
@@ -93,13 +98,25 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTim
 	m_AddForceShader.dispatch();
 }
 
+void FluidSim::curl()
+{
+	m_CurlShader.bindImageTexture(0, m_VelXTexture, GL_READ_ONLY, GL_R32F);
+	m_CurlShader.bindImageTexture(1, m_VelYTexture, GL_READ_ONLY, GL_R32F);
+	m_CurlShader.bindImageTexture(2, m_CurlTexture, GL_WRITE_ONLY, GL_R32F);
+	m_CurlShader.use();
+	m_CurlShader.setUint("screenWidth", m_ScreenWidth);
+	m_CurlShader.setUint("screenHeight", m_ScreenHeight);
+	m_CurlShader.dispatch();
+}
+
 void FluidSim::vorticityConfine(float deltaTime)
 {
 	m_VorticityConfineShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_VorticityConfineShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
+	m_VorticityConfineShader.bindImageTexture(2, m_CurlTexture, GL_READ_ONLY, GL_R32F);
 	m_VorticityConfineShader.use();
-	m_DivergenceShader.setUint("screenWidth", m_ScreenWidth);
-	m_DivergenceShader.setUint("screenHeight", m_ScreenHeight);
+	m_VorticityConfineShader.setUint("screenWidth", m_ScreenWidth);
+	m_VorticityConfineShader.setUint("screenHeight", m_ScreenHeight);
 	m_VorticityConfineShader.setFloat("vorticity", m_VorticityCoeff);
 	m_VorticityConfineShader.setFloat("deltaTime", deltaTime);
 	m_VorticityConfineShader.dispatch();

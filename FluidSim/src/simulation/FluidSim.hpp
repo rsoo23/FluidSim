@@ -34,6 +34,7 @@ public:
 
 private:
 	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTime);
+	void curl();
 	void vorticityConfine(float deltaTime);
 	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);
 	void project();
@@ -65,5 +66,5 @@ private:
 	// Curl 
 	GLuint m_CurlTexture;
 	// Compute Shader
-	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_VorticityConfineShader;
+	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_CurlShader, m_VorticityConfineShader;
 };
