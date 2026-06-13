@@ -30,10 +30,10 @@ private:
 	static constexpr unsigned int WORKGROUP_SIZE_Y = 8;
 
     GLuint programId;
+    GLuint m_GroupSizeX;
+	GLuint m_GroupSizeY;
     unsigned int m_ScreenWidth;
 	unsigned int m_ScreenHeight;
-    unsigned int m_GroupSizeX;
-	unsigned int m_GroupSizeY;
 
     enum class ShaderType {
         COMPUTE_SHADER,

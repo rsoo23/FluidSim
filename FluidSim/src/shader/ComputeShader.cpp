@@ -4,8 +4,8 @@
 ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int screenWidth, unsigned int screenHeight) :
 	m_ScreenWidth(screenWidth),
 	m_ScreenHeight(screenHeight),
-	m_GroupSizeX(std::ceil(screenWidth / WORKGROUP_SIZE_X)),
-	m_GroupSizeY(std::ceil(screenHeight/ WORKGROUP_SIZE_Y))
+	m_GroupSizeX(static_cast<GLuint>(std::ceil(screenWidth / WORKGROUP_SIZE_X))),
+	m_GroupSizeY(static_cast<GLuint>(std::ceil(screenHeight/ WORKGROUP_SIZE_Y)))
 {
 	// retrieve the compute shader source code from path
     std::string code;
