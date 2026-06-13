@@ -42,7 +42,7 @@ int main()
 	InputHandler inputHandler;
 
 	// fluid simulation setup
-	FluidSim fluidSim(width, height);
+	FluidSim fluidSim(width, height, 20);
 
 	// run application
 	app.run(shader, renderer, inputHandler, fluidSim);

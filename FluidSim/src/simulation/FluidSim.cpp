@@ -2,9 +2,10 @@
 #include "FluidSim.hpp"
 #include "shader/ComputeShader.hpp"
 
-FluidSim::FluidSim(int screenWidth, int screenHeight):
+FluidSim::FluidSim(int screenWidth, int screenHeight, int jacobiIterations):
 	m_ScreenWidth(static_cast<float>(screenWidth)),
 	m_ScreenHeight(static_cast<float>(screenHeight)),
+	m_JacobiIterations(jacobiIterations),
 	m_DeltaTime(1.f / 60.f),
 	m_JacobiIterations(20),
 	m_DiffusionStep(0.01f * m_DeltaTime),
