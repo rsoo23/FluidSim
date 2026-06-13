@@ -11,7 +11,6 @@ public:
 		unsigned int jacobiIterations,
 		float diffusionCoeff,
 		float viscosityCoeff,
-		float densityIncrement,
 		float cursorRadius,
 		float vorticityCoeff
 	);
@@ -31,8 +30,10 @@ public:
 
 	GLuint getFinalTexture() const;
 
+	void setDensityIncrement(float densityIncrement);
+
 private:
-	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce);
+	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTime);
 	void vorticityConfine(float deltaTime);
 	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);
 	void project();

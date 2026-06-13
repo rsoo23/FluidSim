@@ -38,7 +38,7 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim)
+void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim, float densityIncrement)
 {
 	InputHandler inputHandler;
 	GLfloat deltaTime{ 0.f };
@@ -51,25 +51,23 @@ void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim)
 		deltaTime = currFrame - prevFrame;
 		prevFrame = currFrame;
 
-		std::optional<glm::vec2> mouseDragCoords = inputHandler.getMouseDragCoords();
-		std::optional<glm::vec2> mouseDragDir = inputHandler.getMouseDragDir();
+		bool isCursorInScreen = inputHandler.isCursorInScreen();
+		bool isCursorMoving = inputHandler.isCursorMoving();
 
-		if (mouseDragCoords && mouseDragDir) {
-			float mouseX = (*mouseDragCoords).x;
-			float mouseY = (*mouseDragCoords).y;
+		glm::vec2 mousePos = inputHandler.getMouseDragCoords();
+		glm::vec2 mouseDragDir = (isCursorMoving && isCursorInScreen) ? inputHandler.getMouseDragDir() : glm::vec2(0, 0);
 
-			float mouseDirX = (*mouseDragDir).x;
-			float mouseDirY = (*mouseDragDir).y;
+		float finalDensityIncrement = isCursorInScreen ? densityIncrement : 0;
 
-			std::cout << "delt" << deltaTime << "\n";
-			std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";
-			std::cout << "dirx: " << mouseDirX << ", diry: " << mouseDirY << "\n\n";
+		//std::cout << "delt" << deltaTime << "\n";
+		//std::cout << "x: " << mousePos.x << ", y: " << mousePos.y << "\n";
+		//std::cout << "dirx: " << mouseDragDir.x << ", diry: " << mouseDragDir.y << "\n\n";
 
-			fluidSim.step(static_cast<float>(deltaTime), *mouseDragCoords, *mouseDragDir);
+		fluidSim.setDensityIncrement(finalDensityIncrement);
+		fluidSim.step(static_cast<float>(deltaTime), mousePos, mouseDragDir);
 
-			GLuint finalTex = fluidSim.getFinalTexture();
-			renderer.render(shader, finalTex);
-		}
+		GLuint finalTex = fluidSim.getFinalTexture();
+		renderer.render(shader, finalTex);
 
 		// Swap buffers and poll events  
 		glfwSwapBuffers(m_Window);  

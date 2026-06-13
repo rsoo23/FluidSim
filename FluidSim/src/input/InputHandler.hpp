@@ -17,13 +17,17 @@ public:
 
 	void init(GLFWwindow* window);
 
-	std::optional<glm::vec2> getMouseDragCoords() const;
-	std::optional<glm::vec2> getMouseDragDir() const;
+	glm::vec2 getMouseDragCoords() const;
+	glm::vec2 getMouseDragDir() const;
+
+	bool isCursorInScreen() const;
+	bool isCursorMoving() const;
 
 private:
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 	static void cursorEnterCallback(GLFWwindow* window, int entered);
 	bool m_IsCursorInScreen;
+	bool m_IsCursorMoving;
 	double m_MouseXPosPrev;
 	double m_MouseYPosPrev;
 	double m_MouseXPosCurr;

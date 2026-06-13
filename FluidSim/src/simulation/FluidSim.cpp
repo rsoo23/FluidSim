@@ -8,7 +8,6 @@ FluidSim::FluidSim(
 	unsigned int jacobiIterations,
 	float diffusionCoeff,
 	float viscosityCoeff,
-	float densityIncrement,
 	float cursorRadius,
 	float vorticityCoeff
 ):
@@ -17,7 +16,7 @@ FluidSim::FluidSim(
 	m_JacobiIterations(jacobiIterations),
 	m_DiffusionCoeff(diffusionCoeff),
 	m_ViscosityCoeff(viscosityCoeff),
-	m_DensityIncrement(densityIncrement),
+	m_DensityIncrement(0.f),
 	m_CursorRadius(cursorRadius),
 	m_VorticityCoeff(vorticityCoeff)
 {
@@ -90,6 +89,7 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTim
 	m_AddForceShader.setVec2("mouseForce", mouseForce);
 	m_AddForceShader.setFloat("densityIncrement", m_DensityIncrement);
 	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
+	m_AddForceShader.setFloat("deltaTime", deltaTime);
 	m_AddForceShader.dispatch();
 }
 
@@ -203,4 +203,9 @@ void FluidSim::setEmptyTexture(GLuint texId)
 GLuint FluidSim::getFinalTexture() const
 {
 	return m_DensTexture;
+}
+
+void FluidSim::setDensityIncrement(float densityIncrement)
+{
+	m_DensityIncrement = densityIncrement;
 }

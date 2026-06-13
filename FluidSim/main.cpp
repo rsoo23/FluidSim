@@ -44,9 +44,9 @@ int main()
 
 	Renderer renderer(bgColor, vertices, indices);
 
-	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, densityIncrement, cursorRadius, vorticityCoeff);
+	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff);
 
-	app.run(shader, renderer, fluidSim);
+	app.run(shader, renderer, fluidSim, densityIncrement);
 
 	return 0;  
 }
