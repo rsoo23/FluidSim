@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "ComputeShader.hpp"
 
-ComputeShader::ComputeShader(const std::filesystem::path& path)
+ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int screenWidth, unsigned int screenHeight) :
+	m_ScreenWidth(screenWidth),
+	m_ScreenHeight(screenHeight),
+	m_GroupSizeX(std::ceil(screenWidth / WORKGROUP_SIZE_X)),
+	m_GroupSizeY(std::ceil(screenHeight/ WORKGROUP_SIZE_Y))
 {
 	// retrieve the compute shader source code from path
     std::string code;
@@ -47,13 +51,13 @@ void ComputeShader::use()
 
 void ComputeShader::dispatch()
 {
-	glDispatchCompute(std::ceil(static_cast<float>(800) / static_cast<float>(8)), std::ceil(static_cast<float>(600) / static_cast<float>(8)), 1);
+	glDispatchCompute(m_GroupSizeX, m_GroupSizeY, 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
 
 void ComputeShader::dispatchFinal()
 {
-	glDispatchCompute(std::ceil(static_cast<float>(800) / static_cast<float>(8)), std::ceil(static_cast<float>(600) / static_cast<float>(8)), 1);
+	glDispatchCompute(m_GroupSizeX, m_GroupSizeY, 1);
 	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
 }
 

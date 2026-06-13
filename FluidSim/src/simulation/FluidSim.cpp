@@ -7,9 +7,8 @@ FluidSim::FluidSim(int screenWidth, int screenHeight, int jacobiIterations):
 	m_ScreenHeight(static_cast<float>(screenHeight)),
 	m_JacobiIterations(jacobiIterations),
 	m_DeltaTime(1.f / 60.f),
-	m_JacobiIterations(20),
-	m_DiffusionStep(0.01f * m_DeltaTime),
-	m_ViscosityStep(0.01f * m_DeltaTime)
+	m_DiffusionStep(0.1f * m_DeltaTime),
+	m_ViscosityStep(0.7f * m_DeltaTime)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -37,11 +36,11 @@ FluidSim::FluidSim(int screenWidth, int screenHeight, int jacobiIterations):
 	setEmptyTexture(m_DensTextureNext);
 
 	// compute shader setup
-	m_AddForceShader	= ComputeShader{ R"(shaders\addForce.comp)" };
-	m_AdvectShader		= ComputeShader{ R"(shaders\advect.comp)" };
-	m_JacobiShader		= ComputeShader{ R"(shaders\jacobi.comp)" };
-	m_ProjectShader		= ComputeShader{ R"(shaders\project.comp)" };
-	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)" };
+	m_AddForceShader	= ComputeShader{ R"(shaders\addForce.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_AdvectShader		= ComputeShader{ R"(shaders\advect.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_JacobiShader		= ComputeShader{ R"(shaders\jacobi.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_ProjectShader		= ComputeShader{ R"(shaders\project.comp)", m_ScreenWidth, m_ScreenHeight };
+	m_DivergenceShader	= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
 void FluidSim::step(glm::vec2 mousePos, glm::vec2 mouseDir)
@@ -80,6 +79,13 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens,
 	m_AddForceShader.setFloat("radius", radius); // radius of influence
 	m_AddForceShader.dispatch();
 }
+
+// jacobi(vel1, velnext, vel2)
+// b, x, xtemp
+// xtemp = b + a * (x);
+// vel2 = vel1 + a * velnext
+// swap velnext and vel2
+// x
 
 void FluidSim::diffuse(GLuint& readTex, GLuint& writeTex, float diffuseCoeff)
 {
@@ -123,7 +129,7 @@ void FluidSim::advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep)
 		m_AdvectShader.dispatchFinal();
 	}
 	else
-{
+	{
 		m_AdvectShader.dispatch();
 	}
 	std::swap(readTex, writeTex);
