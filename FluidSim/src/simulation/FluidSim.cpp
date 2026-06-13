@@ -80,7 +80,7 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens,
 	m_AddForceShader.dispatch();
 }
 
-void FluidSim::diffuse(GLuint readTex, GLuint writeTex, float diffuseCoeff)
+void FluidSim::diffuse(GLuint& readTex, GLuint& writeTex, float diffuseCoeff)
 {
 	jacobiSolve(readTex, readTex, writeTex, diffuseCoeff, 1.f + 4.f * diffuseCoeff);
 }
@@ -107,7 +107,7 @@ void FluidSim::project()
 	m_ProjectShader.dispatch();
 }
 
-void FluidSim::advect(GLuint readTex, GLuint writeTex, bool isFinalStep)
+void FluidSim::advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep)
 {
 	m_AdvectShader.bindImageTexture(0, readTex, GL_READ_ONLY, GL_R32F);
 	m_AdvectShader.bindImageTexture(1, writeTex, GL_WRITE_ONLY, GL_R32F);
@@ -128,8 +128,7 @@ void FluidSim::advect(GLuint readTex, GLuint writeTex, bool isFinalStep)
 	std::swap(readTex, writeTex);
 }
 
-void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float c)
-void FluidSim::jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float a, float c)
+void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex, float a, float c)
 {
 	for (int i = 0; i < m_JacobiIterations; ++i)
 	{

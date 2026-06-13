@@ -22,10 +22,10 @@ public:
 
 private:
 	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius);
-	void diffuse(GLuint readTex, GLuint writeTex, float diffuseCoeff);
+	void diffuse(GLuint& readTex, GLuint& writeTex, float diffuseCoeff);
 	void project();
-	void advect(GLuint readTex, GLuint writeTex, bool isFinalStep);
-	void jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float a, float c);
+	void advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep);
+	void jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex, float a, float c);
 
 	// constants used for projection
 	static constexpr float PROJECT_A = 1.f;
