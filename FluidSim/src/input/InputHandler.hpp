@@ -20,7 +20,6 @@ public:
 	std::optional<glm::vec2> getMouseDragDir() const;
 
 private:
-	static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 	bool m_IsDragging;
 	double m_MouseXPosPrev;

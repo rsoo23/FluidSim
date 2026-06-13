@@ -17,7 +17,6 @@ void InputHandler::init(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	glfwSetCursorPosCallback(window, cursorPositionCallback);
-	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 }
 
 std::optional<glm::vec2> InputHandler::getMouseDragCoords() const
