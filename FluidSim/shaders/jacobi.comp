@@ -19,15 +19,10 @@ void main() {
     ivec2 coordUp       = id + ivec2(0, -1);
     ivec2 coordDown     = id + ivec2(0, 1);
 
-    float valLeft    = imageLoad(readTexture1, coordLeft).r;
-    float valRight   = imageLoad(readTexture1, coordRight).r;
-    float valUp      = imageLoad(readTexture1, coordUp).r;
-    float valDown    = imageLoad(readTexture1, coordDown).r;
-
-    float left     = id.x > 0                  ? valLeft  : val1;
-    float right    = id.x < screenWidth - 1    ? valRight : val1;
-    float up       = id.y > 0                  ? valUp    : val1;
-    float down     = id.y < screenHeight - 1   ? valDown  : val1;
+    float left     = id.x > 0                  ? imageLoad(readTexture1, coordLeft).r  : val1;
+    float right    = id.x < screenWidth - 1    ? imageLoad(readTexture1, coordRight).r : val1;
+    float up       = id.y > 0                  ? imageLoad(readTexture1, coordUp).r    : val1;
+    float down     = id.y < screenHeight - 1   ? imageLoad(readTexture1, coordDown).r  : val1;
 
     float finalVal = (val2 + a * (left + right + up + down)) / c;
 

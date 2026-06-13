@@ -18,15 +18,10 @@ void main() {
     ivec2 coordUp       = id + ivec2(0, -1);
     ivec2 coordDown     = id + ivec2(0, 1);
 
-    float presLeft    = imageLoad(presTexture, coordLeft).r;
-    float presRight   = imageLoad(presTexture, coordRight).r;
-    float presUp      = imageLoad(presTexture, coordUp).r;
-    float presDown    = imageLoad(presTexture, coordDown).r;
-
-    float boundedPresLeft     = id.x > 0                  ? presLeft  : pressure;
-    float boundedPresRight    = id.x < screenWidth - 1    ? presRight : pressure;
-    float boundedPresUp       = id.y > 0                  ? presUp    : pressure;
-    float boundedPresDown     = id.y < screenHeight - 1   ? presDown  : pressure;
+    float boundedPresLeft     = id.x > 0                  ? imageLoad(presTexture, coordLeft).r  : pressure;
+    float boundedPresRight    = id.x < screenWidth - 1    ? imageLoad(presTexture, coordRight).r : pressure;
+    float boundedPresUp       = id.y > 0                  ? imageLoad(presTexture, coordUp).r    : pressure;
+    float boundedPresDown     = id.y < screenHeight - 1   ? imageLoad(presTexture, coordDown).r  : pressure;
 
     float finalVelX = velX - (0.5 * (boundedPresRight - boundedPresLeft));
     float finalVelY = velY - (0.5 * (boundedPresDown - boundedPresUp));

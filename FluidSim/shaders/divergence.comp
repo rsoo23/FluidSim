@@ -17,15 +17,10 @@ void main() {
     ivec2 coordUp       = id + ivec2(0, -1);
     ivec2 coordDown     = id + ivec2(0, 1);
 
-    float velXLeft    = imageLoad(velXTexture, coordLeft).r;
-    float velXRight   = imageLoad(velXTexture, coordRight).r;
-    float velYUp      = imageLoad(velYTexture, coordUp).r;
-    float velYDown    = imageLoad(velYTexture, coordDown).r;
-
-    float leftX     = id.x > 0                  ? velXLeft     : velX;
-    float rightX    = id.x < screenWidth - 1    ? velXRight    : velX;
-    float upY       = id.y > 0                  ? velYUp       : velY;
-    float downY     = id.y < screenHeight - 1   ? velYDown     : velY;
+    float leftX     = id.x > 0                  ? imageLoad(velXTexture, coordLeft).r   : velX;
+    float rightX    = id.x < screenWidth - 1    ? imageLoad(velXTexture, coordRight).r  : velX;
+    float upY       = id.y > 0                  ? imageLoad(velYTexture, coordUp).r     : velY;
+    float downY     = id.y < screenHeight - 1   ? imageLoad(velYTexture, coordDown).r   : velY;
 
     float finalDiv = -0.5 * ((rightX - leftX) + (downY - upY));
 
