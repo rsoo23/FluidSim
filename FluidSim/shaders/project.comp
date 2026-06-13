@@ -15,8 +15,8 @@ void main() {
 
     ivec2 coordLeft     = id + ivec2(-1, 0);
     ivec2 coordRight    = id + ivec2(1, 0);
-    ivec2 coordUp       = id + ivec2(0, 1);
-    ivec2 coordDown     = id + ivec2(0, -1);
+    ivec2 coordUp       = id + ivec2(0, -1);
+    ivec2 coordDown     = id + ivec2(0, 1);
 
     float presLeft    = imageLoad(presTexture, coordLeft).r;
     float presRight   = imageLoad(presTexture, coordRight).r;
