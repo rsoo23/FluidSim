@@ -3,7 +3,7 @@
 
 
 InputHandler::InputHandler() :
-	m_IsDragging(true),
+	m_IsCursorInScreen(false),
 	m_MouseXPosPrev(0),
 	m_MouseYPosPrev(0),
 	m_MouseXPosCurr(0),
@@ -17,11 +17,12 @@ void InputHandler::init(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	glfwSetCursorPosCallback(window, cursorPositionCallback);
+	glfwSetCursorEnterCallback(window, cursorEnterCallback);
 }
 
 std::optional<glm::vec2> InputHandler::getMouseDragCoords() const
 {
-	if (m_IsDragging)
+	if (m_IsCursorInScreen)
 	{
 		return glm::vec2(m_MouseXPosCurr, m_MouseYPosCurr);
 	}
@@ -30,7 +31,7 @@ std::optional<glm::vec2> InputHandler::getMouseDragCoords() const
 
 std::optional<glm::vec2> InputHandler::getMouseDragDir() const
 {
-	if (m_IsDragging)
+	if (m_IsCursorInScreen)
 	{
 		return glm::vec2(m_MouseDirX, m_MouseDirY);
 	}
@@ -40,7 +41,7 @@ std::optional<glm::vec2> InputHandler::getMouseDragDir() const
 void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
 {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-	if (handler->m_IsDragging)
+	if (handler->m_IsCursorInScreen)
 	{
 		handler->m_MouseXPosCurr = xPos;
 		handler->m_MouseYPosCurr = yPos;
@@ -50,4 +51,13 @@ void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, doubl
 	}
 	handler->m_MouseXPosPrev = xPos;
 	handler->m_MouseYPosPrev = yPos;
+}
+
+void InputHandler::cursorEnterCallback(GLFWwindow* window, int entered) {
+	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+    if (entered) {
+		handler->m_IsCursorInScreen = true;
+    } else {
+		handler->m_IsCursorInScreen = false;
+    }
 }

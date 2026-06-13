@@ -22,7 +22,8 @@ public:
 
 private:
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
-	bool m_IsDragging;
+	static void cursorEnterCallback(GLFWwindow* window, int entered);
+	bool m_IsCursorInScreen;
 	double m_MouseXPosPrev;
 	double m_MouseYPosPrev;
 	double m_MouseXPosCurr;
