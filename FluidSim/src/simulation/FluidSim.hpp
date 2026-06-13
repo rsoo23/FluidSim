@@ -16,7 +16,7 @@ public:
 
 	void step(glm::vec2 mousePos, glm::vec2 mouseDir);
 
-	GLuint generateTexture(int w, int h, GLenum internalFormat);
+	GLuint generateTexture();
 
 	GLuint getFinalTexture() const;
 

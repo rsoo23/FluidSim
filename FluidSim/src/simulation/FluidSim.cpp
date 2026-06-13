@@ -11,18 +11,18 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_ViscosityStep(0.01f * m_DeltaTime)
 {
 	// compute shader textures setup
-	m_VelXTexture		= generateTexture(800, 600, GL_R32F);
-	m_VelXTextureNext	= generateTexture(800, 600, GL_R32F);
-	m_VelYTexture		= generateTexture(800, 600, GL_R32F);
-	m_VelYTextureNext	= generateTexture(800, 600, GL_R32F);
+	m_VelXTexture		= generateTexture();
+	m_VelXTextureNext	= generateTexture();
+	m_VelYTexture		= generateTexture();
+	m_VelYTextureNext	= generateTexture();
 
-	m_PresTexture		= generateTexture(800, 600, GL_R32F);
-	m_PresTextureNext	= generateTexture(800, 600, GL_R32F);
+	m_PresTexture		= generateTexture();
+	m_PresTextureNext	= generateTexture();
 
-	m_DivTexture		= generateTexture(800, 600, GL_R32F);
+	m_DivTexture		= generateTexture();
 
-	m_DensTexture		= generateTexture(800, 600, GL_R32F);
-	m_DensTextureNext	= generateTexture(800, 600, GL_R32F);
+	m_DensTexture		= generateTexture();
+	m_DensTextureNext	= generateTexture();
 
 	// fill textures with 0
 	glClearTexImage(m_VelXTexture, 0, GL_RED, GL_FLOAT, NULL);
@@ -145,11 +145,12 @@ void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex,
 	}
 }
 
-GLuint FluidSim::generateTexture(int w, int h, GLenum internalFormat)
+GLuint FluidSim::generateTexture()
 {
 	GLuint texId;
+
 	glCreateTextures(GL_TEXTURE_2D, 1, &texId);
-	glTextureStorage2D(texId, 1, internalFormat, w, h);
+	glTextureStorage2D(texId, 1, GL_R32F, m_ScreenWidth, m_ScreenHeight);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
