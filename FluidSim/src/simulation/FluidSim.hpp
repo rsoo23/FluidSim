@@ -24,7 +24,7 @@ private:
 	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius);
 	void diffuse(GLuint readTex, GLuint writeTex);
 	void project();
-	void advect(GLuint readTex, GLuint writeTex);
+	void advect(GLuint readTex, GLuint writeTex, bool isFinalStep);
 	void jacobiSolve(GLuint readTex1, GLuint readTex2, GLuint writeTex, float c);
 
 	int m_ScreenWidth;

@@ -58,8 +58,8 @@ void FluidSim::step(glm::vec2 mousePos)
 	// project
 	project();
 	// advect velocities
-	advect(m_VelXTexture, m_VelXTextureNext);
-	advect(m_VelYTexture, m_VelYTextureNext);
+	advect(m_VelXTexture, m_VelXTextureNext, false);
+	advect(m_VelYTexture, m_VelYTextureNext, false);
 	// project
 	project();
 
@@ -67,9 +67,7 @@ void FluidSim::step(glm::vec2 mousePos)
 	// diffuse
 	diffuse(m_DensTexture, m_DensTextureNext);
 	// advect
-	advect(m_DensTexture, m_DensTextureNext);
-
-	// render to texture? return texture values?
+	advect(m_DensTexture, m_DensTextureNext, true);
 }
 
 void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius)

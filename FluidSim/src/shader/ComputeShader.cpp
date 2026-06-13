@@ -44,7 +44,13 @@ void ComputeShader::use()
 {
 	glUseProgram(programId);
 	glDispatchCompute(std::ceil(800 / 8), std::ceil(600 / 8), 1);
-	//glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+}
+
+void ComputeShader::useFinal()
+{
+	glUseProgram(programId);
+	glDispatchCompute(std::ceil(800 / 8), std::ceil(600 / 8), 1);
 	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
 }
 

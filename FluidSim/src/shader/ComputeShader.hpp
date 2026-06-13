@@ -20,6 +20,7 @@ public:
 	ComputeShader& operator=(ComputeShader&&)		= default;
 
     void use();
+    void useFinal();
 
     void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
 
