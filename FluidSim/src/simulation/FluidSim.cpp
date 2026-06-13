@@ -2,12 +2,14 @@
 #include "FluidSim.hpp"
 #include "shader/ComputeShader.hpp"
 
-FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations):
+FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations, float diffusionCoeff, float viscosityCoeff, float densityIncrement, float cursorRadius):
 	m_ScreenWidth(screenWidth),
 	m_ScreenHeight(screenHeight),
 	m_JacobiIterations(jacobiIterations),
-	m_DiffusionCoeff(0.1f),
-	m_ViscosityCoeff(0.7f)
+	m_DiffusionCoeff(diffusionCoeff),
+	m_ViscosityCoeff(viscosityCoeff),
+	m_DensityIncrement(densityIncrement),
+	m_CursorRadius(cursorRadius)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -45,7 +47,7 @@ FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned
 void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 {
 	// add forces
-	addForce(mousePos, mouseDir, 0.25f, 10.f);
+	addForce(mousePos, mouseDir);
 
 	// velocities:
 	// diffuse
@@ -66,7 +68,7 @@ void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
 }
 
-void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius)
+void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce)
 {
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
@@ -74,8 +76,8 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens,
 	m_AddForceShader.use();
 	m_AddForceShader.setVec2("mousePos", mousePos);
 	m_AddForceShader.setVec2("mouseForce", mouseForce);
-	m_AddForceShader.setFloat("newDens", newDens); // density that will be added
-	m_AddForceShader.setFloat("radius", radius); // radius of influence
+	m_AddForceShader.setFloat("densityIncrement", m_DensityIncrement);
+	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
 	m_AddForceShader.dispatch();
 }
 

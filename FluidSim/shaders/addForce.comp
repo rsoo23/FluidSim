@@ -6,8 +6,8 @@ layout(r32f, binding = 2) uniform image2D densTexture;
 
 uniform vec2 mousePos;
 uniform vec2 mouseForce;
-uniform float newDens;
-uniform float radius;
+uniform float densityIncrement;
+uniform float cursorRadius;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
@@ -17,7 +17,7 @@ void main() {
     float dist = dot(diff, diff);
 
     // gaussian falloff: 1.0 at center, approaches 0.0 at edges
-    float falloff = exp(-dist / (radius * radius));
+    float falloff = exp(-dist / (cursorRadius * cursorRadius));
 
     if (falloff < 0.001) return;
 
@@ -27,7 +27,7 @@ void main() {
 
     velX += mouseForce.x * falloff;
     velY += mouseForce.y * falloff;
-    dens += newDens * falloff;
+    dens += densityIncrement * falloff;
 
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));
     imageStore(velYTexture, id, vec4(velY, 0.0, 0.0, 0.0));

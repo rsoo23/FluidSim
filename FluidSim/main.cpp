@@ -6,28 +6,21 @@
 
 int main()  
 {  
-	// application setup
 	constexpr unsigned int versionMajor{ 4 };
 	constexpr unsigned int versionMinor{ 6 };
 	constexpr unsigned int width{ 800 };
 	constexpr unsigned int height{ 600 };
 
-	Application app(versionMajor, versionMinor, width, height, "FluidSim");
-
-	// shader setup
 	std::filesystem::path vertexRelPath{ R"(shaders\shader.vert)" };
 	std::filesystem::path fragRelPath{ R"(shaders\shader.frag)" };
 	std::filesystem::path cwd{ std::filesystem::current_path() };
 
-	Shader shader(cwd / vertexRelPath, cwd / fragRelPath);
-
-	// renderer setup
 	std::vector<float> vertices = {
-		// positions         // texture coords
-		 1.0f,  1.0f, 0.0f,  1.0f, 0.0f,   // top right
-		 1.0f, -1.0f, 0.0f,  1.0f, 1.0f,   // bottom right
-		-1.0f, -1.0f, 0.0f,  0.0f, 1.0f,   // bottom left
-		-1.0f,  1.0f, 0.0f,  0.0f, 0.0f    // top left 
+		// positions        // texture coords
+		 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,   // top right
+		 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,   // bottom right
+		-1.0f, -1.0f, 0.0f, 0.0f, 1.0f,   // bottom left
+		-1.0f,  1.0f, 0.0f, 0.0f, 0.0f    // top left 
 	};
 
 	std::vector<unsigned int> indices = {  
@@ -36,15 +29,23 @@ int main()
     };
 
 	const glm::vec4 bgColor(0.f, 0.f, 0.f, 1.f);
+
+	constexpr unsigned int jacobiIterations{ 20u };
+	constexpr float diffusionCoeff{ 0.5f };
+	constexpr float viscosityCoeff{ 0.2f };
+	constexpr float densityIncrement{ 0.2f };
+	constexpr float cursorRadius{ 10.f };
+
+	Application app(versionMajor, versionMinor, width, height, "FluidSim");
+
+	Shader shader(cwd / vertexRelPath, cwd / fragRelPath);
+
 	Renderer renderer(bgColor, vertices, indices);
 
-	// input handler setup
 	InputHandler inputHandler;
 
-	// fluid simulation setup
-	FluidSim fluidSim(width, height, 20);
+	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, densityIncrement, cursorRadius);
 
-	// run application
 	app.run(shader, renderer, inputHandler, fluidSim);
 
 	return 0;  

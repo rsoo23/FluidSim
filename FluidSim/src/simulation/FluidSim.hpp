@@ -5,7 +5,7 @@
 
 class FluidSim {
 public:
-	FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations);
+	FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations, float diffusionCoeff, float viscosityCoeff, float densityIncrement, float cursorRadius);
 
 	~FluidSim()								= default;
 
@@ -23,7 +23,7 @@ public:
 	GLuint getFinalTexture() const;
 
 private:
-	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float newDens, float radius);
+	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce);
 	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);
 	void project();
 	void advect(GLuint& readTex, GLuint& writeTex, float deltaTime, bool isFinalStep);
@@ -38,6 +38,8 @@ private:
 	unsigned int m_JacobiIterations;
 	float m_DiffusionCoeff;
 	float m_ViscosityCoeff;
+	float m_DensityIncrement;
+	float m_CursorRadius;
 
 	// Velocity
 	GLuint m_VelXTexture, m_VelXTextureNext;
