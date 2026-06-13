@@ -5,7 +5,7 @@
 FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_ScreenWidth(static_cast<float>(screenWidth)),
 	m_ScreenHeight(static_cast<float>(screenHeight)),
-	m_DeltaTime(1 / 60),
+	m_DeltaTime(1.f / 60.f),
 	m_JacobiIterations(20),
 	m_DiffusionStep(0.01f * m_DeltaTime),
 	m_ViscosityStep(0.01f * m_DeltaTime)
