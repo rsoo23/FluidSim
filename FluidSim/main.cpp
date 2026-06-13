@@ -42,11 +42,9 @@ int main()
 
 	Renderer renderer(bgColor, vertices, indices);
 
-	InputHandler inputHandler;
-
 	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, densityIncrement, cursorRadius);
 
-	app.run(shader, renderer, inputHandler, fluidSim);
+	app.run(shader, renderer, fluidSim);
 
 	return 0;  
 }

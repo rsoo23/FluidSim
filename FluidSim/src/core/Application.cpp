@@ -38,8 +38,9 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, Renderer& renderer, InputHandler& inputHandler, FluidSim& fluidSim)
+void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim)
 {
+	InputHandler inputHandler;
 	GLfloat deltaTime{ 0.f };
 	GLfloat prevFrame{ 0.f };
 
