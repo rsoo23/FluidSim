@@ -2,9 +2,9 @@
 #include "FluidSim.hpp"
 #include "shader/ComputeShader.hpp"
 
-FluidSim::FluidSim(int screenWidth, int screenHeight, int jacobiIterations):
-	m_ScreenWidth(static_cast<float>(screenWidth)),
-	m_ScreenHeight(static_cast<float>(screenHeight)),
+FluidSim::FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations):
+	m_ScreenWidth(screenWidth),
+	m_ScreenHeight(screenHeight),
 	m_JacobiIterations(jacobiIterations),
 	m_DeltaTime(1.f / 60.f),
 	m_DiffusionStep(0.1f * m_DeltaTime),
@@ -99,8 +99,8 @@ void FluidSim::project()
 	m_DivergenceShader.bindImageTexture(1, m_VelYTexture, GL_READ_ONLY, GL_R32F);
 	m_DivergenceShader.bindImageTexture(2, m_DivTexture, GL_WRITE_ONLY, GL_R32F);
 	m_DivergenceShader.use();
-	m_DivergenceShader.setFloat("screenWidth", m_ScreenWidth);
-	m_DivergenceShader.setFloat("screenHeight", m_ScreenHeight);
+	m_DivergenceShader.setUint("screenWidth", m_ScreenWidth);
+	m_DivergenceShader.setUint("screenHeight", m_ScreenHeight);
 	m_DivergenceShader.dispatch();
 	// solve pressure poisson
 	jacobiSolve(m_DivTexture, m_PresTexture, m_PresTextureNext, PROJECT_A, PROJECT_C);
@@ -109,8 +109,8 @@ void FluidSim::project()
 	m_ProjectShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
 	m_ProjectShader.bindImageTexture(2, m_PresTexture, GL_READ_ONLY, GL_R32F);
 	m_ProjectShader.use();
-	m_ProjectShader.setFloat("screenWidth", m_ScreenWidth);
-	m_ProjectShader.setFloat("screenHeight", m_ScreenHeight);
+	m_ProjectShader.setUint("screenWidth", m_ScreenWidth);
+	m_ProjectShader.setUint("screenHeight", m_ScreenHeight);
 	m_ProjectShader.dispatch();
 }
 
@@ -121,8 +121,8 @@ void FluidSim::advect(GLuint& readTex, GLuint& writeTex, bool isFinalStep)
 	m_AdvectShader.bindImageTexture(2, m_VelXTexture, GL_READ_ONLY, GL_R32F);
 	m_AdvectShader.bindImageTexture(3, m_VelYTexture, GL_READ_ONLY, GL_R32F);
 	m_AdvectShader.use();
-	m_AdvectShader.setFloat("screenWidth", m_ScreenWidth);
-	m_AdvectShader.setFloat("screenHeight", m_ScreenHeight);
+	m_AdvectShader.setUint("screenWidth", m_ScreenWidth);
+	m_AdvectShader.setUint("screenHeight", m_ScreenHeight);
 	m_AdvectShader.setFloat("deltaTime", m_DeltaTime);
 	if (isFinalStep)
 	{
@@ -145,8 +145,8 @@ void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex,
 		m_JacobiShader.use();
 		m_JacobiShader.setFloat("a", a);
 		m_JacobiShader.setFloat("c", c);
-		m_JacobiShader.setFloat("screenWidth", m_ScreenWidth);
-		m_JacobiShader.setFloat("screenHeight", m_ScreenHeight);
+		m_JacobiShader.setUint("screenWidth", m_ScreenWidth);
+		m_JacobiShader.setUint("screenHeight", m_ScreenHeight);
 		m_JacobiShader.dispatch();
 		std::swap(readTex2, writeTex);
 	}
@@ -157,7 +157,7 @@ GLuint FluidSim::generateTexture()
 	GLuint texId;
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &texId);
-	glTextureStorage2D(texId, 1, GL_R32F, m_ScreenWidth, m_ScreenHeight);
+	glTextureStorage2D(texId, 1, GL_R32F, static_cast<GLsizei>(m_ScreenWidth), static_cast<GLsizei>(m_ScreenHeight));
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

@@ -7,10 +7,10 @@
 int main()  
 {  
 	// application setup
-	constexpr int versionMajor{ 4 };
-	constexpr int versionMinor{ 6 };
-	constexpr int width{ 800 };
-	constexpr int height{ 600 };
+	constexpr unsigned int versionMajor{ 4 };
+	constexpr unsigned int versionMinor{ 6 };
+	constexpr unsigned int width{ 800 };
+	constexpr unsigned int height{ 600 };
 
 	Application app(versionMajor, versionMinor, width, height, "FluidSim");
 

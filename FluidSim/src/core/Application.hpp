@@ -7,7 +7,7 @@
 
 class Application {
 public:
-	Application(int versionMajor, int versionMinor, int width, int height, const std::string& title);
+	Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, const std::string& title);
 	~Application();
 
 	Application()								= delete;
@@ -21,6 +21,6 @@ public:
 private:
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 	GLFWwindow* m_Window;
-	int m_ScreenWidth;
-	int m_ScreenHeight;
+	unsigned int m_ScreenWidth;
+	unsigned int m_ScreenHeight;
 };

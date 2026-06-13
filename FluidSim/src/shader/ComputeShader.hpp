@@ -20,6 +20,7 @@ public:
     void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
 
     void setFloat(const std::string& name, float value) const;
+    void setUint(const std::string& name, unsigned int value) const;
     void setVec2(const std::string& name, glm::vec2 v) const;
 
     GLuint getProgramId() const;

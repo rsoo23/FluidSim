@@ -5,7 +5,7 @@
 
 class FluidSim {
 public:
-	FluidSim(int screenWidth, int screenHeight, int jacobiIterations);
+	FluidSim(unsigned int screenWidth, unsigned int screenHeight, unsigned int jacobiIterations);
 
 	~FluidSim()								= default;
 
@@ -37,10 +37,10 @@ private:
 	float m_DiffusionStep;
 	float m_ViscosityStep;
 
-	float m_ScreenWidth;
-	float m_ScreenHeight;
+	unsigned int m_ScreenWidth;
+	unsigned int m_ScreenHeight;
+	unsigned int m_JacobiIterations;
 	float m_DeltaTime;
-	int m_JacobiIterations;
 
 	// Velocity
 	GLuint m_VelXTexture, m_VelXTextureNext;

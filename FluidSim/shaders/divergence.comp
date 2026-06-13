@@ -4,8 +4,8 @@ layout(r32f, binding = 0) readonly uniform image2D velXTexture;
 layout(r32f, binding = 1) readonly uniform image2D velYTexture;
 layout(r32f, binding = 2) writeonly uniform image2D divTexture;
 
-uniform float screenWidth;
-uniform float screenHeight;
+uniform uint screenWidth;
+uniform uint screenHeight;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );

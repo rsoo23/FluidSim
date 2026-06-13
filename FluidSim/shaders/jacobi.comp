@@ -6,8 +6,8 @@ layout(r32f, binding = 2) writeonly uniform image2D writeTexture;
 
 uniform float a;
 uniform float c;
-uniform float screenWidth;
-uniform float screenHeight;
+uniform uint screenWidth;
+uniform uint screenHeight;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );

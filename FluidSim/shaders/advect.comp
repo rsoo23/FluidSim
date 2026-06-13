@@ -5,11 +5,11 @@ layout(r32f, binding = 1) writeonly uniform image2D writeTexture;
 layout(r32f, binding = 2) readonly uniform image2D velXTexture;
 layout(r32f, binding = 3) readonly uniform image2D velYTexture;
 
-uniform float screenWidth;
-uniform float screenHeight;
+uniform uint screenWidth;
+uniform uint screenHeight;
 uniform float deltaTime;
 
-float bilinearSample(ivec2 id, float x, float y, int w, int h) {
+float bilinearSample(ivec2 id, float x, float y, uint w, uint h) {
     // Clamp coordinates slightly inside to avoid out-of-bounds access
     float xClamped = clamp(x, 0.0, float(w) - 1.001);
     float yClamped = clamp(y, 0.0, float(h) - 1.001);
@@ -19,8 +19,8 @@ float bilinearSample(ivec2 id, float x, float y, int w, int h) {
     int x1 = x0 + 1;
     int y1 = y0 + 1;
 
-    if (x1 >= w) x1 = w - 1;
-    if (y1 >= h) y1 = h - 1;
+    if (x1 >= w) x1 = int(w) - 1;
+    if (y1 >= h) y1 = int(h) - 1;
 
     float sx = xClamped - x0;
     float sy = yClamped - y0;
@@ -46,7 +46,7 @@ void main() {
     float pointX = id.x - (velX * deltaTime);
     float pointY = id.y - (velY * deltaTime);
 
-    float finalVal = bilinearSample(id, pointX, pointY, int(screenWidth), int(screenHeight));
+    float finalVal = bilinearSample(id, pointX, pointY, screenWidth, screenHeight);
 
     imageStore(writeTexture, id, vec4(finalVal, 0.0, 0.0, 0.0));
 }
