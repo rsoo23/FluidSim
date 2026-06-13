@@ -25,15 +25,15 @@ FluidSim::FluidSim(int screenWidth, int screenHeight):
 	m_DensTextureNext	= generateTexture();
 
 	// fill textures with 0
-	glClearTexImage(m_VelXTexture, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_VelXTextureNext, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_VelYTexture, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_VelYTextureNext, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_PresTexture, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_PresTextureNext, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_DivTexture, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_DensTexture, 0, GL_RED, GL_FLOAT, NULL);
-	glClearTexImage(m_DensTextureNext, 0, GL_RED, GL_FLOAT, NULL);
+	setEmptyTexture(m_VelXTexture);
+	setEmptyTexture(m_VelXTextureNext);
+	setEmptyTexture(m_VelYTexture);
+	setEmptyTexture(m_VelYTextureNext);
+	setEmptyTexture(m_PresTexture);
+	setEmptyTexture(m_PresTextureNext);
+	setEmptyTexture(m_DivTexture);
+	setEmptyTexture(m_DensTexture);
+	setEmptyTexture(m_DensTextureNext);
 
 	// compute shader setup
 	m_AddForceShader	= ComputeShader{ R"(shaders\addForce.comp)" };
@@ -159,6 +159,11 @@ GLuint FluidSim::generateTexture()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	return texId;
+}
+
+void FluidSim::setEmptyTexture(GLuint texId)
+{
+	glClearTexImage(texId, 0, GL_RED, GL_FLOAT, NULL);
 }
 
 GLuint FluidSim::getFinalTexture() const
