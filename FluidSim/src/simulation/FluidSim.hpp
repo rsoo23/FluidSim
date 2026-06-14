@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "shader/ComputeShader.hpp"
+#include "input/InputHandler.hpp"
 
 class FluidSim {
 public:
@@ -25,7 +26,7 @@ public:
 	FluidSim(FluidSim&&)					= delete;
 	FluidSim& operator=(FluidSim&&)			= delete;
 
-	void step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir, bool isCursorInScreen);
+	void step(float deltaTime, const CursorState& cursorState);
 
 	GLuint generateTexture();
 	void setEmptyTexture(GLuint texId);
@@ -33,7 +34,7 @@ public:
 	GLuint getFinalTexture() const;
 
 private:
-	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, bool isCursorInScreen, float deltaTime);
+	void addForce(const CursorState& cursorState, float deltaTime);
 	void curl();
 	void vorticityConfine(float deltaTime);
 	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);

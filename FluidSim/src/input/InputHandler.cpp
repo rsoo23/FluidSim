@@ -2,14 +2,7 @@
 #include "InputHandler.hpp"
 
 
-InputHandler::InputHandler() :
-	m_IsCursorInScreen(false),
-	m_MouseXPosPrev(0),
-	m_MouseYPosPrev(0),
-	m_MouseXPosCurr(0),
-	m_MouseYPosCurr(0),
-	m_MouseDirX(0),
-	m_MouseDirY(0) {}
+InputHandler::InputHandler() : m_CursorState{ glm::dvec2{ 0, 0 }, glm::dvec2{ 0, 0 }, glm::dvec2{ 0, 0 }, false } {}
 
 void InputHandler::init(GLFWwindow* window)
 {
@@ -20,49 +13,44 @@ void InputHandler::init(GLFWwindow* window)
 	glfwSetCursorEnterCallback(window, cursorEnterCallback);
 }
 
-glm::vec2 InputHandler::getMouseDragCoords() const
-{
-	return glm::vec2(m_MouseXPosCurr, m_MouseYPosCurr);
-}
-
-glm::vec2 InputHandler::getMouseDragDir() const
-{
-	return glm::vec2(m_MouseDirX, m_MouseDirY);
-}
-
 void InputHandler::resetFrame()
 {
-	m_MouseDirX = 0;
-	m_MouseDirY = 0;
+	m_CursorState.cursorDir.x = 0;
+	m_CursorState.cursorDir.y = 0;
 }
 
-bool InputHandler::isCursorInScreen() const
+const CursorState& InputHandler::getCursorState() const
 {
-	return m_IsCursorInScreen;
+	return m_CursorState;
 }
 
 void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
 {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 
-	// calculate direction
-	if (handler->m_IsCursorInScreen)
-	{
-		handler->m_MouseXPosCurr = xPos;
-		handler->m_MouseYPosCurr = yPos;
+	CursorState& state = handler->m_CursorState;
 
-		handler->m_MouseDirX = xPos - handler->m_MouseXPosPrev;
-		handler->m_MouseDirY = yPos - handler->m_MouseYPosPrev;
+	// calculate direction
+	if (state.isCursorInScreen)
+	{
+		state.cursorPosCurr.x = xPos;
+		state.cursorPosCurr.y = yPos;
+
+		state.cursorDir.x = xPos - state.cursorPosPrev.x;
+		state.cursorDir.y = yPos - state.cursorPosPrev.y;
 	}
-	handler->m_MouseXPosPrev = xPos;
-	handler->m_MouseYPosPrev = yPos;
+	state.cursorPosPrev.x = xPos;
+	state.cursorPosPrev.y = yPos;
 }
 
 void InputHandler::cursorEnterCallback(GLFWwindow* window, int entered) {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+
+	CursorState& state = handler->m_CursorState;
+
     if (entered) {
-		handler->m_IsCursorInScreen = true;
+		state.isCursorInScreen = true;
     } else {
-		handler->m_IsCursorInScreen = false;
+		state.isCursorInScreen = false;
     }
 }

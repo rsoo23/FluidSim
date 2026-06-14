@@ -4,6 +4,14 @@
 #include "shader/Shader.hpp"
 #include "render/Renderer.hpp"
 
+struct CursorState
+{
+	glm::dvec2 cursorPosPrev;
+	glm::dvec2 cursorPosCurr;
+	glm::dvec2 cursorDir;
+	bool isCursorInScreen;
+};
+
 class InputHandler {
 public:
 	InputHandler();
@@ -17,21 +25,12 @@ public:
 
 	void init(GLFWwindow* window);
 
-	glm::vec2 getMouseDragCoords() const;
-	glm::vec2 getMouseDragDir() const;
-
 	void resetFrame();
 
-	bool isCursorInScreen() const;
+	const CursorState& getCursorState() const;
 
 private:
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 	static void cursorEnterCallback(GLFWwindow* window, int entered);
-	bool m_IsCursorInScreen;
-	double m_MouseXPosPrev;
-	double m_MouseYPosPrev;
-	double m_MouseXPosCurr;
-	double m_MouseYPosCurr;
-	double m_MouseDirX;
-	double m_MouseDirY;
+	CursorState m_CursorState;
 };

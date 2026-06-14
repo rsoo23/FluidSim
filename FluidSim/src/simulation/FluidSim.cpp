@@ -60,10 +60,10 @@ FluidSim::FluidSim(
 	m_CurlShader				= ComputeShader{ R"(shaders\curl.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
-void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir, bool isCursorInScreen)
+void FluidSim::step(float deltaTime, const CursorState& cursorState)
 {
 	// add forces
-	addForce(mousePos, mouseDir, isCursorInScreen, deltaTime);
+	addForce(cursorState, deltaTime);
 
 	curl();
 	vorticityConfine(deltaTime);
@@ -87,15 +87,15 @@ void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir, boo
 	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
 }
 
-void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, bool isCursorInScreen, float deltaTime)
+void FluidSim::addForce(const CursorState& cursorState, float deltaTime)
 {
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(2, m_DensTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.use();
-	m_AddForceShader.setVec2("mousePos", mousePos);
-	m_AddForceShader.setVec2("mouseForce", mouseForce);
-	m_AddForceShader.setFloat("densityIncrement", isCursorInScreen ? m_DensityIncrement : 0.f);
+	m_AddForceShader.setVec2("cursorPos", glm::vec2(cursorState.cursorPosCurr));
+	m_AddForceShader.setVec2("cursorForce", glm::vec2(cursorState.cursorDir));
+	m_AddForceShader.setFloat("densityIncrement", cursorState.isCursorInScreen ? m_DensityIncrement : 0.f);
 	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
 	m_AddForceShader.setFloat("forceMultiplier", m_ForceMultiplier);
 	m_AddForceShader.setFloat("deltaTime", deltaTime);

@@ -53,16 +53,9 @@ void Application::run(Shader& shader, FluidSim& fluidSim)
 		deltaTime = currFrame - prevFrame;
 		prevFrame = currFrame;
 
-		bool isCursorInScreen = inputHandler.isCursorInScreen();
+		const CursorState& cursorState = inputHandler.getCursorState();
 
-		glm::vec2 mousePos = inputHandler.getMouseDragCoords();
-		glm::vec2 mouseDragDir = inputHandler.getMouseDragDir();
-
-		std::cout << "cursor in screen?" << isCursorInScreen << "\n";
-		std::cout << "x: " << mousePos.x << ", y: " << mousePos.y << "\n";
-		std::cout << "dirx: " << mouseDragDir.x << ", diry: " << mouseDragDir.y << "\n\n";
-
-		fluidSim.step(static_cast<float>(deltaTime), mousePos, mouseDragDir, isCursorInScreen);
+		fluidSim.step(static_cast<float>(deltaTime), cursorState);
 
 		GLuint finalTex = fluidSim.getFinalTexture();
 		renderer.render(shader, finalTex);

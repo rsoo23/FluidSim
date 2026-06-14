@@ -4,8 +4,8 @@ layout(r32f, binding = 0) uniform image2D velXTexture;
 layout(r32f, binding = 1) uniform image2D velYTexture;
 layout(r32f, binding = 2) uniform image2D densTexture;
 
-uniform vec2 mousePos;
-uniform vec2 mouseForce;
+uniform vec2 cursorPos;
+uniform vec2 cursorForce;
 uniform float densityIncrement;
 uniform float cursorRadius;
 uniform float forceMultiplier;
@@ -14,8 +14,8 @@ uniform float deltaTime;
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
 
-    // distance from this cell to mouse position
-    vec2 diff = vec2(id) - mousePos;
+    // distance from this cell to cursor position
+    vec2 diff = vec2(id) - cursorPos;
     float dist = dot(diff, diff);
 
     // gaussian falloff: 1.0 at center, approaches 0.0 at edges
@@ -27,8 +27,8 @@ void main() {
     float velY = imageLoad(velYTexture, id).r;
     float dens = imageLoad(densTexture, id).r;
 
-    velX += mouseForce.x * falloff * deltaTime * forceMultiplier;
-    velY += mouseForce.y * falloff * deltaTime * forceMultiplier;
+    velX += cursorForce.x * falloff * deltaTime * forceMultiplier;
+    velY += cursorForce.y * falloff * deltaTime * forceMultiplier;
     dens += densityIncrement * falloff;
 
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));
