@@ -35,6 +35,7 @@ int main()
 	constexpr float viscosityCoeff{ 0.25f };
 	constexpr float densityIncrement{ 0.2f };
 	constexpr float cursorRadius{ 10.f };
+	constexpr float forceMultiplier{ 10000.f };
 
 	constexpr float vorticityCoeff{ 40.f };
 
@@ -44,7 +45,7 @@ int main()
 
 	Renderer renderer(bgColor, vertices, indices);
 
-	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff);
+	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier);
 
 	app.run(shader, renderer, fluidSim, densityIncrement);
 

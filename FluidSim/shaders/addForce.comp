@@ -8,6 +8,7 @@ uniform vec2 mousePos;
 uniform vec2 mouseForce;
 uniform float densityIncrement;
 uniform float cursorRadius;
+uniform float forceMultiplier;
 uniform float deltaTime;
 
 void main() {
@@ -26,8 +27,8 @@ void main() {
     float velY = imageLoad(velYTexture, id).r;
     float dens = imageLoad(densTexture, id).r;
 
-    velX += mouseForce.x * falloff * deltaTime;
-    velY += mouseForce.y * falloff * deltaTime;
+    velX += mouseForce.x * falloff * deltaTime * forceMultiplier;
+    velY += mouseForce.y * falloff * deltaTime * forceMultiplier;
     dens += densityIncrement * falloff;
 
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));

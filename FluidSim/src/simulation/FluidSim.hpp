@@ -12,7 +12,8 @@ public:
 		float diffusionCoeff,
 		float viscosityCoeff,
 		float cursorRadius,
-		float vorticityCoeff
+		float vorticityCoeff,
+		float forceMultiplier
 	);
 
 	~FluidSim()								= default;
@@ -52,6 +53,7 @@ private:
 	float m_ViscosityCoeff;
 	float m_DensityIncrement;
 	float m_CursorRadius;
+	float m_ForceMultiplier;
 	float m_VorticityCoeff;
 
 	// Velocity

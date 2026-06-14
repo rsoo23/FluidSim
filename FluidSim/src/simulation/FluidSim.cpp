@@ -9,7 +9,8 @@ FluidSim::FluidSim(
 	float diffusionCoeff,
 	float viscosityCoeff,
 	float cursorRadius,
-	float vorticityCoeff
+	float vorticityCoeff,
+	float forceMultiplier
 ):
 	m_ScreenWidth(screenWidth),
 	m_ScreenHeight(screenHeight),
@@ -18,7 +19,8 @@ FluidSim::FluidSim(
 	m_ViscosityCoeff(viscosityCoeff),
 	m_DensityIncrement(0.f),
 	m_CursorRadius(cursorRadius),
-	m_VorticityCoeff(vorticityCoeff)
+	m_VorticityCoeff(vorticityCoeff),
+	m_ForceMultiplier(forceMultiplier)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -94,6 +96,7 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTim
 	m_AddForceShader.setVec2("mouseForce", mouseForce);
 	m_AddForceShader.setFloat("densityIncrement", m_DensityIncrement);
 	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
+	m_AddForceShader.setFloat("forceMultiplier", m_ForceMultiplier);
 	m_AddForceShader.setFloat("deltaTime", deltaTime);
 	m_AddForceShader.dispatch();
 }
