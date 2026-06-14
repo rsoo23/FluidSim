@@ -44,18 +44,18 @@ ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int scr
 	glDeleteShader(computeShader);
 }
 
-void ComputeShader::use()
+void ComputeShader::use() const
 {
 	glUseProgram(programId);
 }
 
-void ComputeShader::dispatch()
+void ComputeShader::dispatch() const
 {
 	glDispatchCompute(m_GroupSizeX, m_GroupSizeY, 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
 
-void ComputeShader::dispatchFinal()
+void ComputeShader::dispatchFinal() const
 {
 	glDispatchCompute(m_GroupSizeX, m_GroupSizeY, 1);
 	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);

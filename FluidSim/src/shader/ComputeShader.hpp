@@ -13,9 +13,9 @@ public:
 	ComputeShader& operator=(const ComputeShader&)  = delete;
 	ComputeShader(ComputeShader&&)					= delete;
 
-    void use();
-    void dispatch();
-    void dispatchFinal();
+    void use() const;
+    void dispatch() const;
+    void dispatchFinal() const;
 
     void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
 

@@ -28,7 +28,7 @@ public:
 
 	void step(float deltaTime, const CursorState& cursorState);
 
-	GLuint generateTexture();
+	GLuint generateTexture() const;
 	void setEmptyTexture(GLuint texId);
 
 	GLuint getFinalTexture() const;

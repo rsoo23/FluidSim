@@ -200,7 +200,7 @@ void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex,
 	}
 }
 
-GLuint FluidSim::generateTexture()
+GLuint FluidSim::generateTexture() const
 {
 	GLuint texId{};
 

@@ -13,7 +13,8 @@ public:
 	Shader(Shader&&)					= delete;
 	Shader& operator=(Shader&&)		    = delete;
 
-    void use();
+    void use() const;
+    void setFloat(const std::string& name, float value) const;
 
 private:
     GLuint programId;

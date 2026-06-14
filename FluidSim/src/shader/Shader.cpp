@@ -61,10 +61,15 @@ Shader::Shader(const std::filesystem::path& vertexPath, const std::filesystem::p
 	glDeleteShader(fragment);
 }
 
-void Shader::use()
+void Shader::use() const
 {
 	glUseProgram(programId);
 }
+
+void Shader::setFloat(const std::string &name, float value) const
+{ 
+    glUniform1f(glGetUniformLocation(programId, name.c_str()), value); 
+} 
 
 void Shader::checkShaderError(GLuint shaderId, ShaderType type) const
 {
