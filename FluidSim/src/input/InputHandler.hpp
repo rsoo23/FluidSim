@@ -28,7 +28,6 @@ private:
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 	static void cursorEnterCallback(GLFWwindow* window, int entered);
 	bool m_IsCursorInScreen;
-	bool m_IsCursorMoving;
 	double m_MouseXPosPrev;
 	double m_MouseYPosPrev;
 	double m_MouseXPosCurr;
