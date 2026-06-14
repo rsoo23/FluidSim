@@ -55,13 +55,14 @@ void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim, fl
 		bool isCursorMoving = inputHandler.isCursorMoving();
 
 		glm::vec2 mousePos = inputHandler.getMouseDragCoords();
-		glm::vec2 mouseDragDir = (isCursorMoving && isCursorInScreen) ? inputHandler.getMouseDragDir() : glm::vec2(0, 0);
+		glm::vec2 mouseDragDir = inputHandler.getMouseDragDir();
 
 		float finalDensityIncrement = isCursorInScreen ? densityIncrement : 0;
 
-		//std::cout << "delt" << deltaTime << "\n";
-		//std::cout << "x: " << mousePos.x << ", y: " << mousePos.y << "\n";
-		//std::cout << "dirx: " << mouseDragDir.x << ", diry: " << mouseDragDir.y << "\n\n";
+		std::cout << "cursor move?" << isCursorMoving << "\n";
+		std::cout << "cursor in screen?" << isCursorInScreen << "\n";
+		std::cout << "x: " << mousePos.x << ", y: " << mousePos.y << "\n";
+		std::cout << "dirx: " << mouseDragDir.x << ", diry: " << mouseDragDir.y << "\n\n";
 
 		fluidSim.setDensityIncrement(finalDensityIncrement);
 		fluidSim.step(static_cast<float>(deltaTime), mousePos, mouseDragDir);
@@ -71,6 +72,7 @@ void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim, fl
 
 		// Swap buffers and poll events  
 		glfwSwapBuffers(m_Window);  
+		inputHandler.resetFrame();
 		glfwPollEvents();  
 	}  
 }

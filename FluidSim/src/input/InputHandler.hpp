@@ -20,6 +20,8 @@ public:
 	glm::vec2 getMouseDragCoords() const;
 	glm::vec2 getMouseDragDir() const;
 
+	void resetFrame();
+
 	bool isCursorInScreen() const;
 	bool isCursorMoving() const;
 

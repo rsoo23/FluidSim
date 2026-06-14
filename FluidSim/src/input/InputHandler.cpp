@@ -31,6 +31,13 @@ glm::vec2 InputHandler::getMouseDragDir() const
 	return glm::vec2(m_MouseDirX, m_MouseDirY);
 }
 
+void InputHandler::resetFrame()
+{
+	m_IsCursorMoving = false;
+	m_MouseDirX = 0;
+	m_MouseDirY = 0;
+}
+
 bool InputHandler::isCursorInScreen() const
 {
 	return m_IsCursorInScreen;
@@ -45,15 +52,7 @@ void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, doubl
 {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 
-	// check if cursor is moving
-	if (handler->m_MouseXPosPrev == xPos && handler->m_MouseYPosPrev == yPos)
-	{
-		handler->m_IsCursorMoving = false;
-	}
-	else
-	{
-		handler->m_IsCursorMoving = true;
-	}
+	handler->m_IsCursorMoving = true;
 
 	// calculate direction
 	if (handler->m_IsCursorInScreen)
