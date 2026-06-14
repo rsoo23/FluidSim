@@ -142,7 +142,7 @@ void FluidSim::project()
 	m_DivergenceShader.setUint("screenHeight", m_ScreenHeight);
 	m_DivergenceShader.dispatch();
 	// solve pressure poisson
-	jacobiSolve(m_DivTexture, m_PresTexture, m_PresTextureNext, PROJECT_A, PROJECT_C);
+	jacobiSolve(m_PresTexture, m_DivTexture, m_PresTextureNext, PROJECT_A, PROJECT_C);
 	// subtract pressure gradient for incompressibility
 	m_ProjectShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_ProjectShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
