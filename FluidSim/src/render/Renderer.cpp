@@ -2,10 +2,9 @@
 #include "Renderer.hpp"
 
 Renderer::Renderer(
-	const glm::vec4& bgColor,
 	const std::vector<float>& vertices,
 	const std::vector<unsigned int>& indices	
-): m_BgColor(bgColor)
+)
 {
 	// VAO, VBO, EBO Setup
 	glGenVertexArrays(1, &m_VAO);
@@ -31,7 +30,7 @@ Renderer::Renderer(
 void Renderer::render(Shader& shader, GLuint finalTexture)
 {
 	// clear bg
-	glClearColor(m_BgColor.r, m_BgColor.g, m_BgColor.b, m_BgColor.a);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// bind texture

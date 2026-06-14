@@ -28,8 +28,6 @@ int main()
         1, 2, 3  // second triangle
     };
 
-	const glm::vec4 bgColor(0.f, 0.f, 0.f, 1.f);
-
 	constexpr unsigned int jacobiIterations{ 40u };
 	constexpr float diffusionCoeff{ 2.f };
 	constexpr float viscosityCoeff{ 0.25f };
@@ -43,7 +41,7 @@ int main()
 
 	Shader shader(cwd / vertexRelPath, cwd / fragRelPath);
 
-	Renderer renderer(bgColor, vertices, indices);
+	Renderer renderer(vertices, indices);
 
 	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier);
 

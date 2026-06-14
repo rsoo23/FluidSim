@@ -6,7 +6,6 @@
 class Renderer {
 public:
 	Renderer(
-		const glm::vec4& bgColor,
 		const std::vector<float>& vertices,
 		const std::vector<unsigned int>& indices
 	);
@@ -22,5 +21,4 @@ public:
 
 private:
 	GLuint m_VBO, m_VAO, m_EBO;
-	glm::vec4 m_BgColor;
 };
