@@ -13,15 +13,15 @@ FluidSim::FluidSim(
 	float forceMultiplier,
 	float densityIncrement
 ):
-	m_ScreenWidth(screenWidth),
-	m_ScreenHeight(screenHeight),
-	m_JacobiIterations(jacobiIterations),
-	m_DiffusionCoeff(diffusionCoeff),
-	m_ViscosityCoeff(viscosityCoeff),
-	m_CursorRadius(cursorRadius),
-	m_VorticityCoeff(vorticityCoeff),
-	m_ForceMultiplier(forceMultiplier),
-	m_DensityIncrement(densityIncrement)
+	m_ScreenWidth{ screenWidth },
+	m_ScreenHeight{ screenHeight },
+	m_JacobiIterations{ jacobiIterations },
+	m_DiffusionCoeff{ diffusionCoeff },
+	m_ViscosityCoeff{ viscosityCoeff },
+	m_CursorRadius{ cursorRadius },
+	m_VorticityCoeff{ vorticityCoeff },
+	m_ForceMultiplier{ forceMultiplier },
+	m_DensityIncrement{ densityIncrement }
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -185,7 +185,7 @@ void FluidSim::advect(GLuint& readTex, GLuint& writeTex, float deltaTime, bool i
 
 void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex, float a, float c)
 {
-	for (int i = 0; i < m_JacobiIterations; ++i)
+	for (unsigned int i{ 0 }; i < m_JacobiIterations; ++i)
 	{
 		m_JacobiShader.bindImageTexture(0, readTex1, GL_READ_ONLY, GL_R32F);
 		m_JacobiShader.bindImageTexture(1, readTex2, GL_READ_ONLY, GL_R32F);
@@ -202,7 +202,7 @@ void FluidSim::jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex,
 
 GLuint FluidSim::generateTexture()
 {
-	GLuint texId;
+	GLuint texId{};
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &texId);
 	glTextureStorage2D(texId, 1, GL_R32F, static_cast<GLsizei>(m_ScreenWidth), static_cast<GLsizei>(m_ScreenHeight));

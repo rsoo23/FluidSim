@@ -43,8 +43,8 @@ private:
 	void jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex, float a, float c);
 
 	// constants used for projection
-	static constexpr float PROJECT_A = 1.f;
-	static constexpr float PROJECT_C = 4.f;
+	static constexpr float PROJECT_A{ 1.f };
+	static constexpr float PROJECT_C{ 4.f };
 
 	unsigned int m_ScreenWidth;
 	unsigned int m_ScreenHeight;

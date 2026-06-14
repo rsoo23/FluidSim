@@ -28,7 +28,7 @@ void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, doubl
 {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 
-	CursorState& state = handler->m_CursorState;
+	CursorState& state{ handler->m_CursorState };
 
 	// calculate direction
 	if (state.isCursorInScreen)
@@ -46,7 +46,7 @@ void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, doubl
 void InputHandler::cursorEnterCallback(GLFWwindow* window, int entered) {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 
-	CursorState& state = handler->m_CursorState;
+	CursorState& state{ handler->m_CursorState };
 
     if (entered) {
 		state.isCursorInScreen = true;

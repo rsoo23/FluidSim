@@ -24,11 +24,11 @@ int main()
 
 	constexpr float vorticityCoeff{ 40.f };
 
-	Application app(versionMajor, versionMinor, width, height, "FluidSim");
+	Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
 
-	Shader shader(cwd / vertexRelPath, cwd / fragRelPath);
+	Shader shader{ cwd / vertexRelPath, cwd / fragRelPath };
 
-	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement);
+	FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement };
 
 	app.run(shader, fluidSim);
 

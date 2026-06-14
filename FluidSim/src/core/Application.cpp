@@ -6,8 +6,8 @@
 #include "render/Renderer.hpp"
 
 Application::Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, const std::string& title) :
-	m_ScreenWidth(width),
-	m_ScreenHeight(height)
+	m_ScreenWidth{ width },
+	m_ScreenHeight{ height }
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);  
@@ -41,23 +41,23 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 
 void Application::run(Shader& shader, FluidSim& fluidSim)
 {
-	Renderer renderer;
-	InputHandler inputHandler;
-	GLfloat deltaTime{ 0.f };
-	GLfloat prevFrame{ 0.f };
+	Renderer renderer{};
+	InputHandler inputHandler{};
+	double deltaTime{ 0.f };
+	double prevFrame{ 0.f };
 
 	inputHandler.init(m_Window);
 	while (!glfwWindowShouldClose(m_Window))
 	{  
-		GLfloat currFrame = glfwGetTime();
+		double currFrame{ glfwGetTime() };
 		deltaTime = currFrame - prevFrame;
 		prevFrame = currFrame;
 
-		const CursorState& cursorState = inputHandler.getCursorState();
+		const CursorState& cursorState{ inputHandler.getCursorState() };
 
 		fluidSim.step(static_cast<float>(deltaTime), cursorState);
 
-		GLuint finalTex = fluidSim.getFinalTexture();
+		GLuint finalTex{ fluidSim.getFinalTexture() };
 		renderer.render(shader, finalTex);
 
 		// Swap buffers and poll events  

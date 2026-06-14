@@ -4,10 +4,10 @@
 Shader::Shader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath)
 {
 	// 1. retrieve the vertex/fragment source code from filePath
-    std::string vertexCode;
-    std::string fragmentCode;
-    std::ifstream vShaderFile;
-    std::ifstream fShaderFile;
+	std::string vertexCode{};
+	std::string fragmentCode{};
+	std::ifstream vShaderFile{};
+	std::ifstream fShaderFile{};
     // ensure ifstream objects can throw exceptions:
     vShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     fShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
@@ -16,7 +16,7 @@ Shader::Shader(const std::filesystem::path& vertexPath, const std::filesystem::p
         // open files
         vShaderFile.open(vertexPath);
         fShaderFile.open(fragmentPath);
-        std::stringstream vShaderStream, fShaderStream;
+		std::stringstream vShaderStream{}, fShaderStream{};
         // read file's buffer contents into streams
         vShaderStream << vShaderFile.rdbuf();
         fShaderStream << fShaderFile.rdbuf();		
@@ -35,7 +35,7 @@ Shader::Shader(const std::filesystem::path& vertexPath, const std::filesystem::p
     const char* fShaderCode = fragmentCode.c_str();
 
     // 2. compile shaders
-	unsigned int vertex, fragment;
+	unsigned int vertex{}, fragment{};
 	   
 	// vertex Shader
 	vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -68,7 +68,7 @@ void Shader::use()
 
 void Shader::checkShaderError(GLuint shaderId, ShaderType type) const
 {
-	int success;
+	int success{};
 	char infoLog[512];
 
 	switch (type) {

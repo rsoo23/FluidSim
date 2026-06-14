@@ -26,8 +26,8 @@ public:
     GLuint getProgramId() const;
 
 private:
-	static constexpr unsigned int WORKGROUP_SIZE_X = 8;
-	static constexpr unsigned int WORKGROUP_SIZE_Y = 8;
+    static constexpr unsigned int WORKGROUP_SIZE_X{ 8u };
+    static constexpr unsigned int WORKGROUP_SIZE_Y{ 8u };
 
     GLuint programId;
     GLuint m_GroupSizeX;

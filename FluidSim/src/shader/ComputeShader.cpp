@@ -2,21 +2,21 @@
 #include "ComputeShader.hpp"
 
 ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int screenWidth, unsigned int screenHeight) :
-	m_ScreenWidth(screenWidth),
-	m_ScreenHeight(screenHeight),
-	m_GroupSizeX(static_cast<GLuint>(std::ceil(screenWidth / WORKGROUP_SIZE_X))),
-	m_GroupSizeY(static_cast<GLuint>(std::ceil(screenHeight/ WORKGROUP_SIZE_Y)))
+	m_ScreenWidth{ screenWidth },
+	m_ScreenHeight{ screenHeight },
+	m_GroupSizeX{ static_cast<GLuint>(std::ceil(screenWidth / WORKGROUP_SIZE_X)) },
+	m_GroupSizeY{ static_cast<GLuint>(std::ceil(screenHeight / WORKGROUP_SIZE_Y)) }
 {
 	// retrieve the compute shader source code from path
-    std::string code;
-    std::ifstream file;
+	std::string code{};
+	std::ifstream file{};
     // ensure ifstream objects can throw exceptions:
     file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     try 
     {
         // open files
         file.open(path);
-        std::stringstream shaderStream;
+		std::stringstream shaderStream{};
         // read file's buffer contents into stream
         shaderStream << file.rdbuf();
         // close file handler
@@ -30,7 +30,7 @@ ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int scr
     }
     const char* shaderSource = code.c_str();
 
-	GLuint computeShader = glCreateShader(GL_COMPUTE_SHADER);
+	GLuint computeShader{ glCreateShader(GL_COMPUTE_SHADER) };
 	glShaderSource(computeShader, 1, &shaderSource, NULL);
 	glCompileShader(computeShader);
 	checkComputeShaderError(computeShader, ShaderType::COMPUTE_SHADER);
@@ -88,7 +88,7 @@ GLuint ComputeShader::getProgramId() const
 
 void ComputeShader::checkComputeShaderError(GLuint shaderId, ShaderType type) const
 {
-	int success;
+	int success{};
 	char infoLog[512];
 
 	switch (type) {
