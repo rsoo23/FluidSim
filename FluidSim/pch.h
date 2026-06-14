@@ -7,6 +7,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <array>
 
 #include <glad/glad.h>  
 #include <GLFW/glfw3.h>

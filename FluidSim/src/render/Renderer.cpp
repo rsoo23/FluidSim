@@ -3,15 +3,15 @@
 
 Renderer::Renderer()
 {
-	static constexpr float vertices[] = {
-		// positions        // texture coords
-		 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,   // top right
-		 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,   // bottom right
-		-1.0f, -1.0f, 0.0f, 0.0f, 1.0f,   // bottom left
-		-1.0f,  1.0f, 0.0f, 0.0f, 0.0f    // top left 
+	static constexpr std::array<float, 20> vertices = {
+		// positions     // texture coords
+		 1.f,  1.f, 0.f, 1.f, 0.f,   // top right
+		 1.f, -1.f, 0.f, 1.f, 1.f,   // bottom right
+		-1.f, -1.f, 0.f, 0.f, 1.f,   // bottom left
+		-1.f,  1.f, 0.f, 0.f, 0.f    // top left 
 	};
 
-	static constexpr unsigned int indices[] = {
+	static constexpr std::array<unsigned int, 6> indices = {
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
     };
@@ -24,10 +24,10 @@ Renderer::Renderer()
 	glBindVertexArray(m_VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
 	// Vertex Attributes
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -49,6 +49,7 @@ void Renderer::render(Shader& shader, GLuint finalTexture)
 
 	// user shaders
 	shader.use();
+	shader.setFloat("time", static_cast<float>(glfwGetTime()));
 
 	// bind VAO
 	glBindVertexArray(m_VAO);
