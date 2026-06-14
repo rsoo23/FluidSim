@@ -13,7 +13,8 @@ public:
 		float viscosityCoeff,
 		float cursorRadius,
 		float vorticityCoeff,
-		float forceMultiplier
+		float forceMultiplier,
+		float densityIncrement
 	);
 
 	~FluidSim()								= default;
@@ -24,17 +25,15 @@ public:
 	FluidSim(FluidSim&&)					= delete;
 	FluidSim& operator=(FluidSim&&)			= delete;
 
-	void step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir);
+	void step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir, bool isCursorInScreen);
 
 	GLuint generateTexture();
 	void setEmptyTexture(GLuint texId);
 
 	GLuint getFinalTexture() const;
 
-	void setDensityIncrement(float densityIncrement);
-
 private:
-	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTime);
+	void addForce(glm::vec2 mousePos, glm::vec2 mouseForce, bool isCursorInScreen, float deltaTime);
 	void curl();
 	void vorticityConfine(float deltaTime);
 	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);

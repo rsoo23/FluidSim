@@ -23,7 +23,6 @@ public:
 	void resetFrame();
 
 	bool isCursorInScreen() const;
-	bool isCursorMoving() const;
 
 private:
 	static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);

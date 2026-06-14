@@ -39,7 +39,7 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, FluidSim& fluidSim, float densityIncrement)
+void Application::run(Shader& shader, FluidSim& fluidSim)
 {
 	Renderer renderer;
 	InputHandler inputHandler;
@@ -47,27 +47,22 @@ void Application::run(Shader& shader, FluidSim& fluidSim, float densityIncrement
 	GLfloat prevFrame{ 0.f };
 
 	inputHandler.init(m_Window);
-	while (!glfwWindowShouldClose(m_Window))  
+	while (!glfwWindowShouldClose(m_Window))
 	{  
 		GLfloat currFrame = glfwGetTime();
 		deltaTime = currFrame - prevFrame;
 		prevFrame = currFrame;
 
 		bool isCursorInScreen = inputHandler.isCursorInScreen();
-		bool isCursorMoving = inputHandler.isCursorMoving();
 
 		glm::vec2 mousePos = inputHandler.getMouseDragCoords();
 		glm::vec2 mouseDragDir = inputHandler.getMouseDragDir();
 
-		float finalDensityIncrement = isCursorInScreen ? densityIncrement : 0;
-
-		std::cout << "cursor move?" << isCursorMoving << "\n";
 		std::cout << "cursor in screen?" << isCursorInScreen << "\n";
 		std::cout << "x: " << mousePos.x << ", y: " << mousePos.y << "\n";
 		std::cout << "dirx: " << mouseDragDir.x << ", diry: " << mouseDragDir.y << "\n\n";
 
-		fluidSim.setDensityIncrement(finalDensityIncrement);
-		fluidSim.step(static_cast<float>(deltaTime), mousePos, mouseDragDir);
+		fluidSim.step(static_cast<float>(deltaTime), mousePos, mouseDragDir, isCursorInScreen);
 
 		GLuint finalTex = fluidSim.getFinalTexture();
 		renderer.render(shader, finalTex);

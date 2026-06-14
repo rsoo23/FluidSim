@@ -43,11 +43,6 @@ bool InputHandler::isCursorInScreen() const
 	return m_IsCursorInScreen;
 }
 
-bool InputHandler::isCursorMoving() const
-{
-	return m_IsCursorMoving;
-}
-
 void InputHandler::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
 {
 	auto* handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));

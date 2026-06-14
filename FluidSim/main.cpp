@@ -28,9 +28,9 @@ int main()
 
 	Shader shader(cwd / vertexRelPath, cwd / fragRelPath);
 
-	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier);
+	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement);
 
-	app.run(shader, fluidSim, densityIncrement);
+	app.run(shader, fluidSim);
 
 	return 0;  
 }

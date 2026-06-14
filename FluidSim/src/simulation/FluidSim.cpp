@@ -10,17 +10,18 @@ FluidSim::FluidSim(
 	float viscosityCoeff,
 	float cursorRadius,
 	float vorticityCoeff,
-	float forceMultiplier
+	float forceMultiplier,
+	float densityIncrement
 ):
 	m_ScreenWidth(screenWidth),
 	m_ScreenHeight(screenHeight),
 	m_JacobiIterations(jacobiIterations),
 	m_DiffusionCoeff(diffusionCoeff),
 	m_ViscosityCoeff(viscosityCoeff),
-	m_DensityIncrement(0.f),
 	m_CursorRadius(cursorRadius),
 	m_VorticityCoeff(vorticityCoeff),
-	m_ForceMultiplier(forceMultiplier)
+	m_ForceMultiplier(forceMultiplier),
+	m_DensityIncrement(densityIncrement)
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -59,10 +60,10 @@ FluidSim::FluidSim(
 	m_CurlShader				= ComputeShader{ R"(shaders\curl.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
-void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
+void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir, bool isCursorInScreen)
 {
 	// add forces
-	addForce(mousePos, mouseDir, deltaTime);
+	addForce(mousePos, mouseDir, isCursorInScreen, deltaTime);
 
 	curl();
 	vorticityConfine(deltaTime);
@@ -86,7 +87,7 @@ void FluidSim::step(float deltaTime, glm::vec2 mousePos, glm::vec2 mouseDir)
 	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
 }
 
-void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTime)
+void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, bool isCursorInScreen, float deltaTime)
 {
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture, GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture, GL_READ_WRITE, GL_R32F);
@@ -94,7 +95,7 @@ void FluidSim::addForce(glm::vec2 mousePos, glm::vec2 mouseForce, float deltaTim
 	m_AddForceShader.use();
 	m_AddForceShader.setVec2("mousePos", mousePos);
 	m_AddForceShader.setVec2("mouseForce", mouseForce);
-	m_AddForceShader.setFloat("densityIncrement", m_DensityIncrement);
+	m_AddForceShader.setFloat("densityIncrement", isCursorInScreen ? m_DensityIncrement : 0.f);
 	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
 	m_AddForceShader.setFloat("forceMultiplier", m_ForceMultiplier);
 	m_AddForceShader.setFloat("deltaTime", deltaTime);
@@ -225,7 +226,3 @@ GLuint FluidSim::getFinalTexture() const
 	return m_DensTexture;
 }
 
-void FluidSim::setDensityIncrement(float densityIncrement)
-{
-	m_DensityIncrement = densityIncrement;
-}
