@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "Renderer.hpp"
+#include "shader/BaseShader.hpp"
 
-Renderer::Renderer()
+Renderer::Renderer(BaseShader& vertShader, BaseShader& fragShader) : m_VertShader{ vertShader }, m_FragShader{ fragShader }
 {
 	static constexpr std::array<float, 20> vertices{
 		// positions     // texture coords
@@ -37,7 +38,7 @@ Renderer::Renderer()
 	glEnableVertexAttribArray(1);
 }
 
-void Renderer::render(Shader& shader, GLuint finalTexture)
+void Renderer::render(GLuint finalTexture)
 {
 	// clear bg
 	glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -48,8 +49,8 @@ void Renderer::render(Shader& shader, GLuint finalTexture)
 	glBindTexture(GL_TEXTURE_2D, finalTexture); 
 
 	// user shaders
-	shader.use();
-	shader.setFloat("time", static_cast<float>(glfwGetTime()));
+	m_VertShader.use();
+	m_FragShader.use();
 
 	// bind VAO
 	glBindVertexArray(m_VAO);

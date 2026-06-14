@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shader/Shader.hpp"
+#include "shader/BaseShader.hpp"
 #include "render/Renderer.hpp"
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
@@ -16,7 +16,7 @@ public:
 	Application(Application&&)					= delete;
 	Application& operator=(Application&&)		= delete;
 
-	void run(Shader& shader, FluidSim& fluidSim);
+	void run(BaseShader& vertShader, BaseShader& fragShader, FluidSim& fluidSim);
 
 private:
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);

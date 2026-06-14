@@ -21,7 +21,14 @@ FluidSim::FluidSim(
 	m_CursorRadius{ cursorRadius },
 	m_VorticityCoeff{ vorticityCoeff },
 	m_ForceMultiplier{ forceMultiplier },
-	m_DensityIncrement{ densityIncrement }
+	m_DensityIncrement{ densityIncrement },
+	m_AddForceShader{ R"(shaders\addForce.comp)", screenWidth, screenHeight },
+	m_AdvectShader{ R"(shaders\advect.comp)", screenWidth, screenHeight },
+	m_JacobiShader{ R"(shaders\jacobi.comp)", screenWidth, screenHeight },
+	m_ProjectShader{ R"(shaders\project.comp)", screenWidth, screenHeight },
+	m_DivergenceShader{ R"(shaders\divergence.comp)", screenWidth, screenHeight },
+	m_VorticityConfineShader{ R"(shaders\vorticityConfine.comp)", screenWidth, screenHeight },
+	m_CurlShader{ R"(shaders\curl.comp)", screenWidth, screenHeight }
 {
 	// compute shader textures setup
 	m_VelXTexture		= generateTexture();
@@ -49,15 +56,6 @@ FluidSim::FluidSim(
 	setEmptyTexture(m_DivTexture);
 	setEmptyTexture(m_DensTexture);
 	setEmptyTexture(m_CurlTexture);
-
-	// compute shader setup
-	m_AddForceShader			= ComputeShader{ R"(shaders\addForce.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_AdvectShader				= ComputeShader{ R"(shaders\advect.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_JacobiShader				= ComputeShader{ R"(shaders\jacobi.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_ProjectShader				= ComputeShader{ R"(shaders\project.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_DivergenceShader			= ComputeShader{ R"(shaders\divergence.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_VorticityConfineShader	= ComputeShader{ R"(shaders\vorticityConfine.comp)", m_ScreenWidth, m_ScreenHeight };
-	m_CurlShader				= ComputeShader{ R"(shaders\curl.comp)", m_ScreenWidth, m_ScreenHeight };
 }
 
 void FluidSim::step(float deltaTime, const CursorState& cursorState)
@@ -125,13 +123,6 @@ void FluidSim::vorticityConfine(float deltaTime)
 	m_VorticityConfineShader.setFloat("deltaTime", deltaTime);
 	m_VorticityConfineShader.dispatch();
 }
-
-// jacobi(vel1, velnext, vel2)
-// b, x, xtemp
-// xtemp = b + a * (x);
-// vel2 = vel1 + a * velnext
-// swap velnext and vel2
-// x
 
 void FluidSim::diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime)
 {

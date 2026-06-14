@@ -11,9 +11,8 @@ int main()
 	constexpr unsigned int width{ 800 };
 	constexpr unsigned int height{ 600 };
 
-	std::filesystem::path vertexRelPath{ R"(shaders\shader.vert)" };
-	std::filesystem::path fragRelPath{ R"(shaders\shader.frag)" };
-	std::filesystem::path cwd{ std::filesystem::current_path() };
+	const std::filesystem::path vertexRelPath{ R"(shaders\shader.vert)" };
+	const std::filesystem::path fragRelPath{ R"(shaders\fire.frag)" };
 
 	constexpr unsigned int jacobiIterations{ 40u };
 	constexpr float diffusionCoeff{ 2.f };
@@ -26,11 +25,12 @@ int main()
 
 	Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
 
-	Shader shader{ cwd / vertexRelPath, cwd / fragRelPath };
+	BaseShader vertShader{ vertexRelPath, GL_VERTEX_SHADER };
+	BaseShader fragShader{ fragRelPath, GL_FRAGMENT_SHADER };
 
 	FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement };
 
-	app.run(shader, fluidSim);
+	app.run(vertShader, fragShader, fluidSim);
 
 	return 0;  
 }

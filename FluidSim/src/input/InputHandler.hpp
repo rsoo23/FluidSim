@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "shader/Shader.hpp"
 #include "render/Renderer.hpp"
 
 struct CursorState

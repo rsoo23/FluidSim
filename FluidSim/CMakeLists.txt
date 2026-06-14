@@ -11,7 +11,7 @@ find_package(glm CONFIG REQUIRED)
 add_executable(FluidSim
 	"main.cpp"
 	"pch.h"
-	"src/shader/Shader.cpp"
+	"src/shader/BaseShader.cpp"
 	"src/core/Application.cpp"
 	"src/render/Renderer.cpp"
 	"src/input/InputHandler.cpp"

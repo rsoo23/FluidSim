@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Application.hpp"
-#include "shader/Shader.hpp"
+#include "shader/BaseShader.hpp"
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
 #include "render/Renderer.hpp"
@@ -39,9 +39,9 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, FluidSim& fluidSim)
+void Application::run(BaseShader& vertShader, BaseShader& fragShader, FluidSim& fluidSim)
 {
-	Renderer renderer{};
+	Renderer renderer{ vertShader, fragShader };
 	InputHandler inputHandler{};
 	double deltaTime{ 0.f };
 	double prevFrame{ 0.f };
@@ -58,7 +58,8 @@ void Application::run(Shader& shader, FluidSim& fluidSim)
 		fluidSim.step(static_cast<float>(deltaTime), cursorState);
 
 		GLuint finalTex{ fluidSim.getFinalTexture() };
-		renderer.render(shader, finalTex);
+
+		renderer.render(finalTex);
 
 		// Swap buffers and poll events  
 		glfwSwapBuffers(m_Window);  
