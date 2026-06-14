@@ -3,6 +3,7 @@
 #include "shader/Shader.hpp"
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
+#include "render/Renderer.hpp"
 
 Application::Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, const std::string& title) :
 	m_ScreenWidth(width),
@@ -38,8 +39,9 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(Shader& shader, Renderer& renderer, FluidSim& fluidSim, float densityIncrement)
+void Application::run(Shader& shader, FluidSim& fluidSim, float densityIncrement)
 {
+	Renderer renderer;
 	InputHandler inputHandler;
 	GLfloat deltaTime{ 0.f };
 	GLfloat prevFrame{ 0.f };

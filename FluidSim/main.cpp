@@ -15,19 +15,6 @@ int main()
 	std::filesystem::path fragRelPath{ R"(shaders\shader.frag)" };
 	std::filesystem::path cwd{ std::filesystem::current_path() };
 
-	std::vector<float> vertices = {
-		// positions        // texture coords
-		 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,   // top right
-		 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,   // bottom right
-		-1.0f, -1.0f, 0.0f, 0.0f, 1.0f,   // bottom left
-		-1.0f,  1.0f, 0.0f, 0.0f, 0.0f    // top left 
-	};
-
-	std::vector<unsigned int> indices = {  
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
-
 	constexpr unsigned int jacobiIterations{ 40u };
 	constexpr float diffusionCoeff{ 2.f };
 	constexpr float viscosityCoeff{ 0.25f };
@@ -41,11 +28,9 @@ int main()
 
 	Shader shader(cwd / vertexRelPath, cwd / fragRelPath);
 
-	Renderer renderer(vertices, indices);
-
 	FluidSim fluidSim(width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier);
 
-	app.run(shader, renderer, fluidSim, densityIncrement);
+	app.run(shader, fluidSim, densityIncrement);
 
 	return 0;  
 }

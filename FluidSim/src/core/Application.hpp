@@ -16,7 +16,7 @@ public:
 	Application(Application&&)					= delete;
 	Application& operator=(Application&&)		= delete;
 
-	void run(Shader& shader, Renderer& renderer, FluidSim& fluidSim, float densityIncrement);
+	void run(Shader& shader, FluidSim& fluidSim, float densityIncrement);
 
 private:
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);

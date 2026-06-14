@@ -5,13 +5,9 @@
 
 class Renderer {
 public:
-	Renderer(
-		const std::vector<float>& vertices,
-		const std::vector<unsigned int>& indices
-	);
+	Renderer();
 	~Renderer();
 
-	Renderer()								= delete;
 	Renderer(const Renderer&)				= delete;
 	Renderer& operator=(const Renderer&)	= delete;
 	Renderer(Renderer&&)					= delete;
