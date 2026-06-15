@@ -21,8 +21,8 @@ public:
     void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
 
 private:
-    static constexpr unsigned int WORKGROUP_SIZE_X{ 8u };
-    static constexpr unsigned int WORKGROUP_SIZE_Y{ 8u };
+    static constexpr unsigned int WORKGROUP_SIZE_X{ 16u };
+    static constexpr unsigned int WORKGROUP_SIZE_Y{ 16u };
     GLuint m_GroupSizeX;
 	GLuint m_GroupSizeY;
     unsigned int m_ScreenWidth;
