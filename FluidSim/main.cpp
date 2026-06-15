@@ -1,7 +1,5 @@
 ﻿#include "pch.h"
 #include "core/Application.hpp"
-#include "render/Renderer.hpp"
-#include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
 
 int main()  

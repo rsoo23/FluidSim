@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Renderer.hpp"
-#include "shader/VertFragShader.hpp"
 
 Renderer::Renderer(const std::filesystem::path& vertexRelPath, const std::filesystem::path& fragRelPath) :
 	m_VertFragShader{ vertexRelPath, fragRelPath }

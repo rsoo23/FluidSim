@@ -1,9 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include "shader/VertFragShader.hpp"
 #include "render/Renderer.hpp"
-#include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
 
 class Application {

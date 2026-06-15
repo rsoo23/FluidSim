@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "InputHandler.hpp"
 
-
 InputHandler::InputHandler() : m_CursorState{ glm::dvec2{ 0, 0 }, glm::dvec2{ 0, 0 }, glm::dvec2{ 0, 0 }, false } {}
 
 void InputHandler::init(GLFWwindow* window)

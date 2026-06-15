@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Application.hpp"
-#include "shader/VertFragShader.hpp"
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
 #include "render/Renderer.hpp"
@@ -54,6 +53,9 @@ void Application::run(const std::filesystem::path& vertexRelPath, const std::fil
 		prevFrame = currFrame;
 
 		const CursorState& cursorState{ inputHandler.getCursorState() };
+
+		std::cout << cursorState.cursorPosCurr.x << "\n";
+		std::cout << cursorState.cursorPosCurr.y << "\n\n";
 
 		fluidSim.step(static_cast<float>(deltaTime), cursorState);
 
