@@ -11,7 +11,8 @@ FluidSim::FluidSim(
 	float cursorRadius,
 	float vorticityCoeff,
 	float forceMultiplier,
-	float densityIncrement
+	float densityIncrement,
+	float densityIncrementMultiplier
 ):
 	m_ScreenWidth{ screenWidth },
 	m_ScreenHeight{ screenHeight },
@@ -22,6 +23,7 @@ FluidSim::FluidSim(
 	m_VorticityCoeff{ vorticityCoeff },
 	m_ForceMultiplier{ forceMultiplier },
 	m_DensityIncrement{ densityIncrement },
+	m_DensityIncrementMultiplier{ densityIncrementMultiplier },
 	m_AddForceShader{ R"(shaders\addForce.comp)", screenWidth, screenHeight },
 	m_AdvectShader{ R"(shaders\advect.comp)", screenWidth, screenHeight },
 	m_JacobiShader{ R"(shaders\jacobi.comp)", screenWidth, screenHeight },
@@ -96,6 +98,7 @@ void FluidSim::addForce(const CursorState& cursorState, float deltaTime)
 	m_AddForceShader.setFloat("densityIncrement", cursorState.isCursorInScreen ? m_DensityIncrement : 0.f);
 	m_AddForceShader.setFloat("cursorRadius", m_CursorRadius);
 	m_AddForceShader.setFloat("forceMultiplier", m_ForceMultiplier);
+	m_AddForceShader.setFloat("densityIncrementMultiplier", m_DensityIncrementMultiplier);
 	m_AddForceShader.setFloat("deltaTime", deltaTime);
 	m_AddForceShader.dispatch();
 }

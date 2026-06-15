@@ -19,13 +19,14 @@ int main()
 	constexpr float viscosityCoeff{ 0.25f };
 	constexpr float densityIncrement{ 0.2f };
 	constexpr float cursorRadius{ 10.f };
-	constexpr float forceMultiplier{ 10000.f };
+	constexpr float forceMultiplier{ 1000.f };
+	constexpr float densityIncrementMultiplier{ 100.f };
 
 	constexpr float vorticityCoeff{ 40.f };
 
 	Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
 
-	FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement };
+	FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement, densityIncrementMultiplier };
 
 	app.run(vertexRelPath, fragRelPath, fluidSim);
 

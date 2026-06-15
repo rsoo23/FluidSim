@@ -15,7 +15,8 @@ public:
 		float cursorRadius,
 		float vorticityCoeff,
 		float forceMultiplier,
-		float densityIncrement
+		float densityIncrement,
+		float densityIncrementMultiplier
 	);
 	~FluidSim();
 
@@ -54,6 +55,7 @@ private:
 	float m_CursorRadius;
 	float m_ForceMultiplier;
 	float m_VorticityCoeff;
+	float m_DensityIncrementMultiplier;
 
 	// Velocity
 	GLuint m_VelXTexture, m_VelXTextureNext;

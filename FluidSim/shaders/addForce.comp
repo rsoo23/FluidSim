@@ -9,6 +9,7 @@ uniform vec2 cursorForce;
 uniform float densityIncrement;
 uniform float cursorRadius;
 uniform float forceMultiplier;
+uniform float densityIncrementMultiplier;
 uniform float deltaTime;
 
 void main() {
@@ -29,7 +30,7 @@ void main() {
 
     velX += cursorForce.x * falloff * deltaTime * forceMultiplier;
     velY += cursorForce.y * falloff * deltaTime * forceMultiplier;
-    dens += densityIncrement * falloff;
+    dens += densityIncrement * falloff * deltaTime * densityIncrementMultiplier;
 
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));
     imageStore(velYTexture, id, vec4(velY, 0.0, 0.0, 0.0));
