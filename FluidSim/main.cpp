@@ -25,12 +25,9 @@ int main()
 
 	Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
 
-	BaseShader vertShader{ vertexRelPath, GL_VERTEX_SHADER };
-	BaseShader fragShader{ fragRelPath, GL_FRAGMENT_SHADER };
-
 	FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement };
 
-	app.run(vertShader, fragShader, fluidSim);
+	app.run(vertexRelPath, fragRelPath, fluidSim);
 
 	return 0;  
 }

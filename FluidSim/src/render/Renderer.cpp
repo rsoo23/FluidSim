@@ -2,7 +2,9 @@
 #include "Renderer.hpp"
 #include "shader/BaseShader.hpp"
 
-Renderer::Renderer(BaseShader& vertShader, BaseShader& fragShader) : m_VertShader{ vertShader }, m_FragShader{ fragShader }
+Renderer::Renderer(const std::filesystem::path& vertexRelPath, const std::filesystem::path& fragRelPath) :
+	m_VertShader{ vertexRelPath, GL_VERTEX_SHADER },
+	m_FragShader{ fragRelPath, GL_FRAGMENT_SHADER }
 {
 	static constexpr std::array<float, 20> vertices{
 		// positions     // texture coords

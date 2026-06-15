@@ -5,7 +5,7 @@
 
 class Renderer {
 public:
-	Renderer(BaseShader& vertShader, BaseShader& fragShader);
+	Renderer(const std::filesystem::path& vertexRelPath, const std::filesystem::path& fragRelPath);
 	~Renderer();
 
 	Renderer(const Renderer&)				= delete;

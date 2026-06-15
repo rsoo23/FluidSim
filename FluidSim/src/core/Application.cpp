@@ -39,9 +39,9 @@ void Application::framebufferSizeCallback(GLFWwindow* window, int width, int hei
 	glViewport(0, 0, width, height);
 }
 
-void Application::run(BaseShader& vertShader, BaseShader& fragShader, FluidSim& fluidSim)
+void Application::run(const std::filesystem::path& vertexRelPath, const std::filesystem::path& fragRelPath, FluidSim& fluidSim)
 {
-	Renderer renderer{ vertShader, fragShader };
+	Renderer renderer{ vertexRelPath, fragRelPath };
 	InputHandler inputHandler{};
 	double deltaTime{ 0.f };
 	double prevFrame{ 0.f };
