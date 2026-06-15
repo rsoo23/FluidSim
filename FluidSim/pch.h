@@ -8,6 +8,9 @@
 #include <fstream>
 #include <sstream>
 #include <array>
+#include <stdexcept>
+#include <cerrno>
+#include <cstring>
 
 #include <glad/glad.h>  
 #include <GLFW/glfw3.h>

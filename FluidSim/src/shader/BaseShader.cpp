@@ -30,6 +30,10 @@ GLuint BaseShader::createShader(const std::filesystem::path& path, GLenum shader
 
 	// extract shader source code
 	file.open(std::filesystem::current_path() / path);
+	if (!file)
+	{
+		throw std::runtime_error("Failed to open " + path.string() + ": " + std::strerror(errno));
+	}
 	shaderStream << file.rdbuf();
 	file.close();
 	code = shaderStream.str();
@@ -56,7 +60,7 @@ void BaseShader::checkShaderCompileError(GLuint shaderId, const std::filesystem:
 		std::string infoLog(logLength, '\0');
 
 		glGetShaderInfoLog(shaderId, 512, NULL, infoLog.data());
-		std::cerr << "ERROR::SHADER::COMPILATION_FAILED (" << path <<  ")\n" << infoLog.data() << "\n";
+		throw std::runtime_error("Failed to compile shader " + path.string() + ": " + infoLog);
 	};
 }
 
@@ -72,7 +76,7 @@ void BaseShader::checkProgramLinkError(GLuint programId) const
 		std::string infoLog(logLength, '\0');
 
 		glGetProgramInfoLog(programId, 512, NULL, infoLog.data());
-		std::cerr << "ERROR::PROGRAM::LINKING_FAILED\n" << infoLog.data() << "\n";
+		throw std::runtime_error("Failed to link shader program: " + infoLog);
 	}
 }
 

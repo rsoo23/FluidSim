@@ -22,11 +22,18 @@ int main()
 
 	constexpr float vorticityCoeff{ 40.f };
 
-	Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
+	try
+	{
+		Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
 
-	FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement, densityIncrementMultiplier };
+		FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement, densityIncrementMultiplier };
 
-	app.run(vertexRelPath, fragRelPath, fluidSim);
-
-	return 0;  
+		app.run(vertexRelPath, fragRelPath, fluidSim);
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Fatal: " << e.what() << "\n";
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;  
 }

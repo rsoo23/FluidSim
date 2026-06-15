@@ -8,7 +8,11 @@ Application::Application(unsigned int versionMajor, unsigned int versionMinor, u
 	m_ScreenWidth{ width },
 	m_ScreenHeight{ height }
 {
-	glfwInit();
+	if (!glfwInit())
+	{
+		throw std::runtime_error("Failed to initialize GLFW");
+	}
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);  
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor);  
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
@@ -16,25 +20,24 @@ Application::Application(unsigned int versionMajor, unsigned int versionMinor, u
 
 	m_Window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 
-	if (m_Window == NULL)  
+	if (!m_Window)  
 	{  
-		std::cerr << "Failed to create GLFW window" << std::endl;  
-		glfwTerminate();  
-	}  
+		throw std::runtime_error("Failed to create GLFW window");
+	}
 
-	glfwMakeContextCurrent(m_Window);  
+	glfwMakeContextCurrent(m_Window);
 
 	// Load OpenGL function pointers using GLAD  
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))  
 	{  
-		std::cerr << "Failed to initialize GLAD" << std::endl;  
-		glfwTerminate();
+		throw std::runtime_error("Failed to initialize GLAD");
 	}
 
 	glfwSetFramebufferSizeCallback(m_Window, framebufferSizeCallback);
 };
 
-void Application::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void Application::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
 	glViewport(0, 0, width, height);
 }
 
@@ -53,9 +56,6 @@ void Application::run(const std::filesystem::path& vertexRelPath, const std::fil
 		prevFrame = currFrame;
 
 		const CursorState& cursorState{ inputHandler.getCursorState() };
-
-		std::cout << cursorState.cursorPosCurr.x << "\n";
-		std::cout << cursorState.cursorPosCurr.y << "\n\n";
 
 		fluidSim.step(static_cast<float>(deltaTime), cursorState);
 
