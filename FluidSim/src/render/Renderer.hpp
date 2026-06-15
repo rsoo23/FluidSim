@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "shader/BaseShader.hpp"
+#include "shader/VertFragShader.hpp"
 
 class Renderer {
 public:
@@ -16,6 +16,6 @@ public:
 	void render(GLuint finalTexture);
 
 private:
-	BaseShader m_VertShader, m_FragShader;
+	VertFragShader m_VertFragShader;
 	GLuint m_VBO, m_VAO, m_EBO;
 };

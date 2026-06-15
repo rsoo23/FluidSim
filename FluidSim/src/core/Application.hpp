@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include "shader/BaseShader.hpp"
+#include "shader/VertFragShader.hpp"
 #include "render/Renderer.hpp"
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"

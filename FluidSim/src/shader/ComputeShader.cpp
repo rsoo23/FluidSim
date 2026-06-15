@@ -3,12 +3,22 @@
 #include "ComputeShader.hpp"
 
 ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int screenWidth, unsigned int screenHeight) :
-	BaseShader{ path, GL_COMPUTE_SHADER },
+	BaseShader{},
 	m_ScreenWidth{ screenWidth },
 	m_ScreenHeight{ screenHeight },
 	m_GroupSizeX{ static_cast<GLuint>(std::ceil(screenWidth / WORKGROUP_SIZE_X)) },
 	m_GroupSizeY{ static_cast<GLuint>(std::ceil(screenHeight / WORKGROUP_SIZE_Y)) }
-{}
+{
+	GLuint shaderId{ createShader(path, GL_COMPUTE_SHADER) };
+
+    // create shader program
+	m_ProgramId = glCreateProgram();
+	glAttachShader(m_ProgramId, shaderId);
+	glLinkProgram(m_ProgramId);
+	checkProgramLinkError(m_ProgramId);
+
+	glDeleteShader(shaderId);
+}
 
 void ComputeShader::dispatch() const
 {

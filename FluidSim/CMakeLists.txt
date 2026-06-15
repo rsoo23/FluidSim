@@ -11,11 +11,12 @@ find_package(glm CONFIG REQUIRED)
 add_executable(FluidSim
 	"main.cpp"
 	"pch.h"
-	"src/shader/BaseShader.cpp"
 	"src/core/Application.cpp"
 	"src/render/Renderer.cpp"
 	"src/input/InputHandler.cpp"
+	"src/shader/BaseShader.cpp"
 	"src/shader/ComputeShader.cpp"
+	"src/shader/VertFragShader.cpp"
 	"src/simulation/FluidSim.cpp"
 )
 

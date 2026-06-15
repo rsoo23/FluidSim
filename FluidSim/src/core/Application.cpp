@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Application.hpp"
-#include "shader/BaseShader.hpp"
+#include "shader/VertFragShader.hpp"
 #include "input/InputHandler.hpp"
 #include "simulation/FluidSim.hpp"
 #include "render/Renderer.hpp"

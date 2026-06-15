@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "Renderer.hpp"
-#include "shader/BaseShader.hpp"
+#include "shader/VertFragShader.hpp"
 
 Renderer::Renderer(const std::filesystem::path& vertexRelPath, const std::filesystem::path& fragRelPath) :
-	m_VertShader{ vertexRelPath, GL_VERTEX_SHADER },
-	m_FragShader{ fragRelPath, GL_FRAGMENT_SHADER }
+	m_VertFragShader{ vertexRelPath, fragRelPath }
 {
 	static constexpr std::array<float, 20> vertices{
 		// positions     // texture coords
@@ -51,8 +50,7 @@ void Renderer::render(GLuint finalTexture)
 	glBindTexture(GL_TEXTURE_2D, finalTexture); 
 
 	// user shaders
-	m_VertShader.use();
-	m_FragShader.use();
+	m_VertFragShader.use();
 
 	// bind VAO
 	glBindVertexArray(m_VAO);

@@ -5,10 +5,9 @@
 class BaseShader
 {
 public:
-    BaseShader(const std::filesystem::path& path, GLenum shaderType);
+    BaseShader() = default;
     virtual ~BaseShader();
 
-	BaseShader()							    = delete;
 	BaseShader(const BaseShader&)		        = delete;
 	BaseShader& operator=(BaseShader&&)			= delete;
 	BaseShader& operator=(const BaseShader&)    = delete;
@@ -22,7 +21,9 @@ public:
 
 protected:
     GLuint m_ProgramId;
-    std::filesystem::path m_Path;
-    void checkShaderCompileError(GLuint id) const;
+    GLuint createShader(const std::filesystem::path& path, GLenum shaderType);
     void checkProgramLinkError(GLuint id) const;
+
+private:
+    void checkShaderCompileError(GLuint id, const std::filesystem::path& path) const;
 };
