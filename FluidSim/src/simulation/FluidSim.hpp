@@ -17,8 +17,7 @@ public:
 		float forceMultiplier,
 		float densityIncrement
 	);
-
-	~FluidSim()								= default;
+	~FluidSim();
 
 	FluidSim()								= delete;
 	FluidSim(const FluidSim&)				= delete;

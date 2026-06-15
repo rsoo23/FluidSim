@@ -217,3 +217,16 @@ GLuint FluidSim::getFinalTexture() const
 	return m_DensTexture;
 }
 
+FluidSim::~FluidSim()
+{
+	glDeleteTextures(1, &m_VelXTexture);
+	glDeleteTextures(1, &m_VelXTextureNext);
+	glDeleteTextures(1, &m_VelYTexture);
+	glDeleteTextures(1, &m_VelYTextureNext);
+	glDeleteTextures(1, &m_PresTexture);
+	glDeleteTextures(1, &m_PresTextureNext);
+	glDeleteTextures(1, &m_DivTexture);
+	glDeleteTextures(1, &m_DensTexture);
+	glDeleteTextures(1, &m_DensTextureNext);
+	glDeleteTextures(1, &m_CurlTexture);
+}
