@@ -16,14 +16,19 @@ void main() {
     float velY = imageLoad(velYTexture, id).r;
     float currCurl = imageLoad(curlTexture, id).r;
 
-    ivec2 coordLeft     = id + ivec2(-1, 0);
-    ivec2 coordRight    = id + ivec2(1, 0);
-    ivec2 coordUp       = id + ivec2(0, -1);
-    ivec2 coordDown     = id + ivec2(0, 1);
+    ivec2 coordLeft  = id + ivec2(-1, 0);
+    ivec2 coordRight = id + ivec2(1, 0);
+    ivec2 coordUp    = id + ivec2(0, -1);
+    ivec2 coordDown  = id + ivec2(0, 1);
+
+    float curlLeft  = id.x > 0                 ? imageLoad(curlTexture, coordLeft).r  : currCurl;
+    float curlRight = id.x < screenWidth - 1   ? imageLoad(curlTexture, coordRight).r : currCurl;
+    float curlUp    = id.y > 0                 ? imageLoad(curlTexture, coordUp).r    : currCurl;
+    float curlDown  = id.y < screenHeight - 1  ? imageLoad(curlTexture, coordDown).r  : currCurl;
 
     // vorticity gradient components:
-    float nX = abs(imageLoad(curlTexture, coordRight).r) - abs(imageLoad(curlTexture, coordLeft).r);
-    float nY = abs(imageLoad(curlTexture, coordDown).r) - abs(imageLoad(curlTexture, coordUp).r);
+    float nX = abs(curlRight) - abs(curlLeft);
+    float nY = abs(curlDown) - abs(curlUp);
 
     // calculate normalized components:
     float epsilon = 1e-5; // prevent division by 0
