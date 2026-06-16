@@ -57,6 +57,7 @@ FluidSim::FluidSim(
 	setEmptyTexture(m_PresTextureNext);
 	setEmptyTexture(m_DivTexture);
 	setEmptyTexture(m_DensTexture);
+	setEmptyTexture(m_DensTextureNext);
 	setEmptyTexture(m_CurlTexture);
 }
 
