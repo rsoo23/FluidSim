@@ -27,12 +27,26 @@ GLuint BaseShader::createShader(const std::filesystem::path& path, GLenum shader
 	std::ifstream file{};
 	std::stringstream shaderStream{};
 	GLuint shaderId{ glCreateShader(shaderType) };
+	const auto fullPath = std::filesystem::current_path() / path;
 
-	// extract shader source code
-	file.open(std::filesystem::current_path() / path);
-	if (!file)
+	if (!std::filesystem::exists(fullPath))
 	{
-		throw std::runtime_error("Failed to open " + path.string() + ": " + std::strerror(errno));
+		throw std::runtime_error("Shader not found: " + path.string());
+	}
+
+	if (!std::filesystem::is_regular_file(fullPath))
+	{
+		throw std::runtime_error("Shader path is not a regular file: " + path.string());
+	}
+
+	file.exceptions(std::ios::failbit | std::ios::badbit);
+	try
+	{
+		file.open(std::filesystem::current_path() / path);
+	}
+	catch (const std::ios_base::failure& e)
+	{
+		throw std::runtime_error("Failed to open shader: " + path.string() + "(" + e.code().message() + ")");
 	}
 	shaderStream << file.rdbuf();
 	file.close();
