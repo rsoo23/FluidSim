@@ -28,12 +28,13 @@ public:
 
 	void step(float deltaTime, const CursorState& cursorState);
 
-	GLuint generateTexture() const;
-	void setEmptyTexture(GLuint texId);
 
 	GLuint getFinalTexture() const;
 
 private:
+	GLuint generateTexture() const;
+	void setEmptyTexture(GLuint texId);
+
 	void addForce(const CursorState& cursorState, float deltaTime);
 	void curl();
 	void vorticityConfine(float deltaTime);
