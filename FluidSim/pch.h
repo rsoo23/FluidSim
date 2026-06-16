@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <cerrno>
 #include <cstring>
+#include <memory>
 
 #include <glad/glad.h>  
 #include <GLFW/glfw3.h>

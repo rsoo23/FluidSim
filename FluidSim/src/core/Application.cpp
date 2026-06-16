@@ -18,14 +18,14 @@ Application::Application(unsigned int versionMajor, unsigned int versionMinor, u
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	m_Window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+	m_Window = UniqueGLFWWindow(glfwCreateWindow(width, height, title.c_str(), NULL, NULL));
 
 	if (!m_Window)  
 	{  
 		throw std::runtime_error("Failed to create GLFW window");
 	}
 
-	glfwMakeContextCurrent(m_Window);
+	glfwMakeContextCurrent(m_Window.get());
 
 	// Load OpenGL function pointers using GLAD  
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))  
@@ -33,7 +33,7 @@ Application::Application(unsigned int versionMajor, unsigned int versionMinor, u
 		throw std::runtime_error("Failed to initialize GLAD");
 	}
 
-	glfwSetFramebufferSizeCallback(m_Window, framebufferSizeCallback);
+	glfwSetFramebufferSizeCallback(m_Window.get(), framebufferSizeCallback);
 };
 
 void Application::framebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -48,8 +48,8 @@ void Application::run(const std::filesystem::path& vertexRelPath, const std::fil
 	double deltaTime{ 0.f };
 	double prevFrame{ 0.f };
 
-	inputHandler.init(m_Window);
-	while (!glfwWindowShouldClose(m_Window))
+	inputHandler.init(m_Window.get());
+	while (!glfwWindowShouldClose(m_Window.get()))
 	{  
 		double currFrame{ glfwGetTime() };
 		deltaTime = currFrame - prevFrame;
@@ -64,7 +64,7 @@ void Application::run(const std::filesystem::path& vertexRelPath, const std::fil
 		renderer.render(finalTex);
 
 		// Swap buffers and poll events  
-		glfwSwapBuffers(m_Window);  
+		glfwSwapBuffers(m_Window.get());  
 		inputHandler.resetFrame();
 		glfwPollEvents();  
 	}  
