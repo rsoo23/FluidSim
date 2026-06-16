@@ -11,6 +11,7 @@ uniform uint screenHeight;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    if (id.x >= int(screenWidth) || id.y >= int(screenHeight)) return;
     float val1 = imageLoad(readTexture1, id).r;
     float val2 = imageLoad(readTexture2, id).r;
 

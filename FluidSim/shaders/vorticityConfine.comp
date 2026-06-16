@@ -11,6 +11,7 @@ uniform float deltaTime;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    if (id.x >= int(screenWidth) || id.y >= int(screenHeight)) return;
     float velX = imageLoad(velXTexture, id).r;
     float velY = imageLoad(velYTexture, id).r;
     float currCurl = imageLoad(curlTexture, id).r;

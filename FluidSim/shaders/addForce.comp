@@ -14,6 +14,7 @@ uniform float deltaTime;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+    if (id.x >= imageSize(velXTexture).x || id.y >= imageSize(velXTexture).y) return;
 
     // distance from this cell to cursor position
     vec2 diff = vec2(id) - cursorPos;
