@@ -18,24 +18,26 @@ Renderer::Renderer(const std::filesystem::path& vertexRelPath, const std::filesy
     };
 
 	// VAO, VBO, EBO Setup
-	glGenVertexArrays(1, &m_VAO);
-	glGenBuffers(1, &m_VBO);
-	glGenBuffers(1, &m_EBO);
+	glCreateVertexArrays(1, &m_VAO);
+	glCreateBuffers(1, &m_VBO);
+	glCreateBuffers(1, &m_EBO);
 
-	glBindVertexArray(m_VAO);
+	glNamedBufferStorage(m_VBO, vertices.size() * sizeof(float), vertices.data(), 0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+	glNamedBufferStorage(m_EBO, indices.size() * sizeof(unsigned int), indices.data(), 0);
+	glVertexArrayElementBuffer(m_VAO, m_EBO);
 
 	// Vertex Attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	glVertexArrayVertexBuffer(m_VAO, 0, m_VBO, 0, 5 * sizeof(float));
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glVertexArrayAttribFormat(m_VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
+	glVertexArrayAttribFormat(m_VAO, 1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
+
+	glVertexArrayAttribBinding(m_VAO, 0, 0);
+	glVertexArrayAttribBinding(m_VAO, 1, 0);
+
+	glEnableVertexArrayAttrib(m_VAO, 0);
+	glEnableVertexArrayAttrib(m_VAO, 1);
 }
 
 void Renderer::render(GLuint finalTexture)
@@ -45,8 +47,7 @@ void Renderer::render(GLuint finalTexture)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// bind texture
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, finalTexture); 
+	glBindTextureUnit(0, finalTexture); 
 
 	// user shaders
 	m_VertFragShader.use();
