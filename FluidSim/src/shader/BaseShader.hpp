@@ -15,9 +15,9 @@ public:
 
     void use() const;
 
-    void setFloat(const std::string& name, float value) const;
-    void setUint(const std::string& name, unsigned int value) const;
-    void setVec2(const std::string& name, glm::vec2 v) const;
+    void setFloat(std::string_view name, float value) const;
+    void setUint(std::string_view name, unsigned int value) const;
+    void setVec2(std::string_view name, glm::vec2 v) const;
 
 protected:
     GLuint m_ProgramId;

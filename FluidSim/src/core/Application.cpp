@@ -4,7 +4,7 @@
 #include "simulation/FluidSim.hpp"
 #include "render/Renderer.hpp"
 
-Application::Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, const std::string& title) :
+Application::Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, std::string_view title) :
 	m_ScreenWidth{ width },
 	m_ScreenHeight{ height }
 {
@@ -18,7 +18,7 @@ Application::Application(unsigned int versionMajor, unsigned int versionMinor, u
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	m_Window = UniqueGLFWWindow(glfwCreateWindow(width, height, title.c_str(), NULL, NULL));
+	m_Window = UniqueGLFWWindow(glfwCreateWindow(width, height, title.data(), NULL, NULL));
 
 	if (!m_Window)
 	{  

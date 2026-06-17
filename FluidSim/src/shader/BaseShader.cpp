@@ -6,19 +6,19 @@ void BaseShader::use() const
 	glUseProgram(m_ProgramId);
 }
 
-void BaseShader::setFloat(const std::string &name, float value) const
+void BaseShader::setFloat(std::string_view name, float value) const
 { 
-    glUniform1f(glGetUniformLocation(m_ProgramId, name.c_str()), value); 
+    glUniform1f(glGetUniformLocation(m_ProgramId, name.data()), value); 
 } 
 
-void BaseShader::setUint(const std::string &name, unsigned int value) const
+void BaseShader::setUint(std::string_view name, unsigned int value) const
 { 
-    glUniform1ui(glGetUniformLocation(m_ProgramId, name.c_str()), value); 
+    glUniform1ui(glGetUniformLocation(m_ProgramId, name.data()), value); 
 } 
 
-void BaseShader::setVec2(const std::string &name, glm::vec2 v) const
+void BaseShader::setVec2(std::string_view name, glm::vec2 v) const
 { 
-    glUniform2f(glGetUniformLocation(m_ProgramId, name.c_str()), v.x, v.y); 
+    glUniform2f(glGetUniformLocation(m_ProgramId, name.data()), v.x, v.y); 
 }
 
 GLuint BaseShader::createShader(const std::filesystem::path& path, GLenum shaderType)

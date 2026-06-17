@@ -16,7 +16,7 @@ using UniqueGLFWWindow = std::unique_ptr<GLFWwindow, GLFWWindowDestructor>;
 
 class Application {
 public:
-	Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, const std::string& title);
+	Application(unsigned int versionMajor, unsigned int versionMinor, unsigned int width, unsigned int height, std::string_view title);
 	~Application();
 
 	Application()								= delete;
