@@ -2,6 +2,17 @@
 
 This is my real-time 2D Eulerian fluid simulation on the GPU using the Navier-Stokes equations, rendered with OpenGL 4.6.
 
+## Demo
+
+https://github.com/user-attachments/assets/21c90832-7f13-413e-9409-9707d96097e6
+- Limited to the red channel
+
+https://github.com/user-attachments/assets/f74cb5bf-234a-4d32-a436-dc0620b626d7
+- Uses smoothstep in `fire.frag` to give glowing flame effect
+
+https://github.com/user-attachments/assets/b360a101-24a8-4ed3-a097-940428d939d8
+- Hue cycling for different colors
+
 ## Tools & Libraries
 
 - **OpenGL 4.6** — rendering and compute shaders
