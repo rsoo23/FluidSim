@@ -18,7 +18,7 @@ public:
     void dispatch() const;
     void dispatchFinal() const;
 
-    void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format);
+    void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format) const;
 
 private:
     static constexpr unsigned int WORKGROUP_SIZE_X{ 16u };

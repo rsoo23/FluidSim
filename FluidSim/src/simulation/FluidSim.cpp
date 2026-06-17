@@ -71,7 +71,7 @@ void FluidSim::step(float deltaTime, const CursorState& cursorState)
 	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
 }
 
-void FluidSim::addForce(const CursorState& cursorState, float deltaTime)
+void FluidSim::addForce(const CursorState& cursorState, float deltaTime) const
 {
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture.getTex(), GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture.getTex(), GL_READ_WRITE, GL_R32F);
@@ -87,7 +87,7 @@ void FluidSim::addForce(const CursorState& cursorState, float deltaTime)
 	m_AddForceShader.dispatch();
 }
 
-void FluidSim::curl()
+void FluidSim::curl() const
 {
 	m_CurlShader.bindImageTexture(0, m_VelXTexture.getTex(), GL_READ_ONLY, GL_R32F);
 	m_CurlShader.bindImageTexture(1, m_VelYTexture.getTex(), GL_READ_ONLY, GL_R32F);
@@ -98,7 +98,7 @@ void FluidSim::curl()
 	m_CurlShader.dispatch();
 }
 
-void FluidSim::vorticityConfine(float deltaTime)
+void FluidSim::vorticityConfine(float deltaTime) const
 {
 	m_VorticityConfineShader.bindImageTexture(0, m_VelXTexture.getTex(), GL_READ_WRITE, GL_R32F);
 	m_VorticityConfineShader.bindImageTexture(1, m_VelYTexture.getTex(), GL_READ_WRITE, GL_R32F);
@@ -111,10 +111,10 @@ void FluidSim::vorticityConfine(float deltaTime)
 	m_VorticityConfineShader.dispatch();
 }
 
-void FluidSim::diffuse(GLTexture& readTex, GLTexture& writeTex, float coeff, float deltaTime)
+void FluidSim::diffuse(GLTexture& readTex, GLTexture& writeTex, float coeff, float deltaTime) const
 {
-	float a{ coeff * deltaTime };
-	float c{ 1.f + 4.f * a };
+	const float a{ coeff * deltaTime };
+	const float c{ 1.f + 4.f * a };
 	jacobiSolve(readTex, readTex, writeTex, a, c);
 }
 
@@ -140,7 +140,7 @@ void FluidSim::project()
 	m_ProjectShader.dispatch();
 }
 
-void FluidSim::advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, bool isFinalStep)
+void FluidSim::advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, bool isFinalStep) const
 {
 	m_AdvectShader.bindImageTexture(0, readTex.getTex(), GL_READ_ONLY, GL_R32F);
 	m_AdvectShader.bindImageTexture(1, writeTex.getTex(), GL_WRITE_ONLY, GL_R32F);
@@ -161,7 +161,7 @@ void FluidSim::advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, 
 	std::swap(readTex, writeTex);
 }
 
-void FluidSim::jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& writeTex, float a, float c)
+void FluidSim::jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& writeTex, float a, float c) const
 {
 	for (unsigned int i{ 0 }; i < m_JacobiIterations; ++i)
 	{

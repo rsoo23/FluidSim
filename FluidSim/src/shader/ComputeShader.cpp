@@ -32,7 +32,7 @@ void ComputeShader::dispatchFinal() const
 	glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
 }
 
-void ComputeShader::bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format)
+void ComputeShader::bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format) const
 {
 	glBindImageTexture(unit, tex, 0, GL_FALSE, 0, access, format);
 }

@@ -21,7 +21,7 @@ void BaseShader::setVec2(std::string_view name, glm::vec2 v) const
     glUniform2f(glGetUniformLocation(m_ProgramId, name.data()), v.x, v.y); 
 }
 
-GLuint BaseShader::createShader(const std::filesystem::path& path, GLenum shaderType)
+GLuint BaseShader::createShader(const std::filesystem::path& path, GLenum shaderType) const
 {
 	std::string code{};
 	std::ifstream file{};

@@ -21,7 +21,7 @@ public:
 
 protected:
     GLuint m_ProgramId;
-    GLuint createShader(const std::filesystem::path& path, GLenum shaderType);
+    GLuint createShader(const std::filesystem::path& path, GLenum shaderType) const;
     void checkProgramLinkError(GLuint id) const;
 
 private:

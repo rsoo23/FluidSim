@@ -32,13 +32,13 @@ public:
 	GLuint getFinalTexture() const;
 
 private:
-	void addForce(const CursorState& cursorState, float deltaTime);
-	void curl();
-	void vorticityConfine(float deltaTime);
-	void diffuse(GLTexture& readTex, GLTexture& writeTex, float coeff, float deltaTime);
+	void addForce(const CursorState& cursorState, float deltaTime) const;
+	void curl() const;
+	void vorticityConfine(float deltaTime) const;
+	void diffuse(GLTexture& readTex, GLTexture& writeTex, float coeff, float deltaTime) const;
 	void project();
-	void advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, bool isFinalStep);
-	void jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& writeTex, float a, float c);
+	void advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, bool isFinalStep) const;
+	void jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& writeTex, float a, float c) const;
 
 	// constants used for projection
 	static constexpr float PROJECT_A{ 1.f };
