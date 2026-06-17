@@ -40,6 +40,6 @@ void main() {
     imageStore(densTexture, id, vec4(dens, 0.0, 0.0, 0.0));
 
     vec4 color = imageLoad(multicolorTexture, id);
-    color.rgb += splatColor * falloff * deltaTime * densityIncrementMultiplier;
+    color.rgb += splatColor * densityIncrement * falloff * deltaTime * densityIncrementMultiplier;
     imageStore(multicolorTexture, id, color);
 }
