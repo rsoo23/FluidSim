@@ -64,4 +64,5 @@ Renderer::~Renderer()
 	glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(1, &m_VBO);
     glDeleteBuffers(1, &m_EBO);
+	m_VAO = m_VBO = m_EBO = 0;
 }

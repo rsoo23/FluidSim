@@ -16,5 +16,5 @@ public:
 
 private:
 	VertFragShader m_VertFragShader;
-	GLuint m_VBO, m_VAO, m_EBO;
+	GLuint m_VBO{ 0 }, m_VAO{ 0 }, m_EBO{ 0 };
 };
