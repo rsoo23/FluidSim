@@ -8,22 +8,22 @@ void BaseShader::use() const
 
 void BaseShader::setFloat(std::string_view name, float value) const
 { 
-    glUniform1f(glGetUniformLocation(m_ProgramId, name.data()), value); 
+	glUniform1f(glGetUniformLocation(m_ProgramId, name.data()), value); 
 } 
 
 void BaseShader::setUint(std::string_view name, unsigned int value) const
 { 
-    glUniform1ui(glGetUniformLocation(m_ProgramId, name.data()), value); 
+	glUniform1ui(glGetUniformLocation(m_ProgramId, name.data()), value); 
 } 
 
 void BaseShader::setVec2(std::string_view name, glm::vec2 v) const
-{ 
-    glUniform2f(glGetUniformLocation(m_ProgramId, name.data()), v.x, v.y); 
+{
+	glUniform2f(glGetUniformLocation(m_ProgramId, name.data()), v.x, v.y);
 }
 
 void BaseShader::setVec3(std::string_view name, glm::vec3 v) const
 {
-    glUniform3f(glGetUniformLocation(m_ProgramId, name.data()), v.x, v.y, v.z);
+	glUniform3f(glGetUniformLocation(m_ProgramId, name.data()), v.x, v.y, v.z);
 }
 
 GLuint BaseShader::createShader(const std::filesystem::path& path, GLenum shaderType) const
@@ -91,7 +91,7 @@ void BaseShader::checkProgramLinkError(GLuint programId) const
 	glGetProgramiv(programId, GL_LINK_STATUS, &success);
 	if(!success)
 	{
-		glGetShaderiv(programId, GL_INFO_LOG_LENGTH, &logLength);
+		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLength);
 		std::string infoLog(logLength, '\0');
 
 		glGetProgramInfoLog(programId, 512, NULL, infoLog.data());
