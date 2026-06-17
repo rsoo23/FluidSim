@@ -38,12 +38,19 @@ cd vcpkg; .\bootstrap-vcpkg.bat
 2. Integrate it so that it is available to Visual Studio 
 
 ```powershell
-vcpkg integrate install
+.\vcpkg integrate install
 ```
 
 3. Clone the repo using Visual Studio
 4. Select a build preset (e.g. `x64-debug` or `x64-release`)
-5. Build: `Ctrl+Shift+B`
+
+<img width="272" height="113" alt="image" src="https://github.com/user-attachments/assets/2c151702-3069-4b5e-a84d-003232d27629" />
+
+6. Build: `Ctrl+Shift+B`
+
+7. Run: `Ctrl + F5` or select:
+
+<img width="370" height="70" alt="image" src="https://github.com/user-attachments/assets/b598475e-20f7-46a8-84e8-ce663e1e2b67" />
 
 ## Performance
 
