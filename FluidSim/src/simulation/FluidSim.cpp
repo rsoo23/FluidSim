@@ -104,14 +104,14 @@ void FluidSim::step(float deltaTime, const CursorState& cursorState)
 	// project
 	project();
 
-	if (m_ColorMode == ColorMode::SingleColor)
+	if (m_ColorMode == ColorMode::MultiColor)
+	{
+		advectMulticolor(deltaTime);
+	}
+	else
 	{
 		diffuse(m_DensTexture, m_DensTextureNext, m_DiffusionCoeff, deltaTime);
 		advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
-	}
-	else if (m_ColorMode == ColorMode::MultiColor)
-	{
-		advectMulticolor(deltaTime);
 	}
 }
 
