@@ -13,9 +13,9 @@ Renderer::Renderer(const std::filesystem::path& vertexRelPath, const std::filesy
 	};
 
 	static constexpr std::array<unsigned int, 6> indices{
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
+		0, 1, 3, // first triangle
+		1, 2, 3  // second triangle
+	};
 
 	// VAO, VBO, EBO Setup
 	glCreateVertexArrays(1, &m_VAO);
@@ -62,7 +62,7 @@ void Renderer::render(GLuint finalTexture)
 Renderer::~Renderer()
 {
 	glDeleteVertexArrays(1, &m_VAO);
-    glDeleteBuffers(1, &m_VBO);
-    glDeleteBuffers(1, &m_EBO);
+	glDeleteBuffers(1, &m_VBO);
+	glDeleteBuffers(1, &m_EBO);
 	m_VAO = m_VBO = m_EBO = 0;
 }

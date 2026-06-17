@@ -5,9 +5,9 @@
 class ComputeShader: public BaseShader
 {
 public:
-    ComputeShader(const std::filesystem::path& path, unsigned int screenWidth, unsigned int screenHeight);
+	ComputeShader(const std::filesystem::path& path, unsigned int screenWidth, unsigned int screenHeight);
 
-    ~ComputeShader()                                = default;
+	~ComputeShader()                                = default;
 
 	ComputeShader()                 				= delete;
 	ComputeShader& operator=(ComputeShader&&)		= delete;
@@ -15,16 +15,16 @@ public:
 	ComputeShader& operator=(const ComputeShader&)  = delete;
 	ComputeShader(ComputeShader&&)					= delete;
 
-    void dispatch() const;
-    void dispatchFinal() const;
+	void dispatch() const;
+	void dispatchFinal() const;
 
-    void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format) const;
+	void bindImageTexture(GLuint unit, GLuint tex, GLenum access, GLenum format) const;
 
 private:
-    static constexpr unsigned int WORKGROUP_SIZE_X{ 16u };
-    static constexpr unsigned int WORKGROUP_SIZE_Y{ 16u };
-    GLuint m_GroupSizeX;
+	static constexpr unsigned int WORKGROUP_SIZE_X{ 16u };
+	static constexpr unsigned int WORKGROUP_SIZE_Y{ 16u };
+	GLuint m_GroupSizeX;
 	GLuint m_GroupSizeY;
-    unsigned int m_ScreenWidth;
+	unsigned int m_ScreenWidth;
 	unsigned int m_ScreenHeight;
 };

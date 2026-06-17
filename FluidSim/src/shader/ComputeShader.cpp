@@ -11,7 +11,7 @@ ComputeShader::ComputeShader(const std::filesystem::path& path, unsigned int scr
 {
 	GLuint shaderId{ createShader(path, GL_COMPUTE_SHADER) };
 
-    // create shader program
+	// create shader program
 	m_ProgramId = glCreateProgram();
 	glAttachShader(m_ProgramId, shaderId);
 	glLinkProgram(m_ProgramId);

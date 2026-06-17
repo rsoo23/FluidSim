@@ -47,9 +47,9 @@ void InputHandler::cursorEnterCallback(GLFWwindow* window, int entered) {
 
 	CursorState& state{ handler->m_CursorState };
 
-    if (entered) {
+	if (entered) {
 		state.isCursorInScreen = true;
-    } else {
+	} else {
 		state.isCursorInScreen = false;
-    }
+	}
 }

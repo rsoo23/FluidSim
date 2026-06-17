@@ -22,7 +22,7 @@ add_executable(FluidSim
 )
 
 target_link_libraries(FluidSim PRIVATE
-    OpenGL::GL
+	OpenGL::GL
 	glfw
 	glad::glad
 	glm::glm
@@ -34,7 +34,7 @@ target_include_directories(FluidSim PUBLIC
 )
 
 add_custom_command(TARGET FluidSim POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+	COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
 		${CMAKE_CURRENT_SOURCE_DIR}/shaders/
 		${CMAKE_CURRENT_BINARY_DIR}/shaders/
 	COMMENT "Copying shaders into build output directory"
@@ -42,6 +42,5 @@ add_custom_command(TARGET FluidSim POST_BUILD
 
 set_property(TARGET FluidSim PROPERTY CXX_STANDARD 17)
 set_property(TARGET FluidSim PROPERTY CXX_STANDARD_REQUIRED ON)
-endif()
 
 # TODO: Add tests and install targets if needed.

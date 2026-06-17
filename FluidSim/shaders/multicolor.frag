@@ -7,13 +7,13 @@ uniform sampler2D tex;
 
 void main()
 {
-    vec3 col = texture(tex, TexCoord).rgb;
+	vec3 col = texture(tex, TexCoord).rgb;
 
-    // reinhard tone mapping
-    col = col / (col + 1.0);
+	// reinhard tone mapping
+	col = col / (col + 1.0);
 
-    // gamma correction
-    col = pow(col, vec3(1.0 / 2.2));
+	// gamma correction
+	col = pow(col, vec3(1.0 / 2.2));
 
-    FragColor = vec4(col, 1.0);
+	FragColor = vec4(col, 1.0);
 }

@@ -1,9 +1,9 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "core/Application.hpp"
 #include "simulation/FluidSim.hpp"
 
-int main()  
-{  
+int main()
+{
 	constexpr unsigned int versionMajor{ 4 };
 	constexpr unsigned int versionMinor{ 6 };
 	constexpr unsigned int width{ 800 };
@@ -30,23 +30,23 @@ int main()
 
 	constexpr float vorticityCoeff{ 10.f };
 
-	static_assert(jacobiIterations > 0,           			"jacobiIterations must be > 0");
-	static_assert(jacobiIterations <= 40,          			"jacobiIterations must be <= 40");
-	static_assert(diffusionCoeff > 0.f,           			"diffusionCoeff must be > 0.0");
-	static_assert(diffusionCoeff <= 1.f,          			"diffusionCoeff must be <= 1.0");
-	static_assert(viscosityCoeff > 0.f,           			"viscosityCoeff must be > 0.0");
-	static_assert(viscosityCoeff <= 1.f,          			"viscosityCoeff must be <= 1.0");
-	static_assert(densityIncrement > 0.f,         			"densityIncrement must be > 0.0");
-	static_assert(densityIncrement <= 1.f,					"densityIncrement must be <= 1.0");
-	static_assert(cursorRadius > 0.f,             	    	"cursorRadius must be > 0.0");
-	static_assert(cursorRadius < float(width) / 10.f,    	"cursorRadius must be < width / 10");
-	static_assert(cursorRadius < float(height) / 10.f,   	"cursorRadius must be < height / 10");
-	static_assert(forceMultiplier > 0.f,          	    	"forceMultiplier must be > 0.0");
-	static_assert(forceMultiplier <= 1000.f,           		"force_multiplier must be <= 1000.0");
-	static_assert(densityIncrementMultiplier > 0.f,     	"densityIncrementMultiplier must be > 0.0");
-	static_assert(densityIncrementMultiplier <= 100.f,		"densityIncrementMultiplier must be <= 100.0");
-	static_assert(vorticityCoeff >= 0.f,          			"vorticityCoeff must be > 0.0");
-	static_assert(vorticityCoeff <= 10.f,         			"vorticityCoeff must be <= 10.0");
+	static_assert(jacobiIterations > 0,                       "jacobiIterations must be > 0");
+	static_assert(jacobiIterations <= 40,                     "jacobiIterations must be <= 40");
+	static_assert(diffusionCoeff > 0.f,                       "diffusionCoeff must be > 0.0");
+	static_assert(diffusionCoeff <= 1.f,                      "diffusionCoeff must be <= 1.0");
+	static_assert(viscosityCoeff > 0.f,                       "viscosityCoeff must be > 0.0");
+	static_assert(viscosityCoeff <= 1.f,                      "viscosityCoeff must be <= 1.0");
+	static_assert(densityIncrement > 0.f,                     "densityIncrement must be > 0.0");
+	static_assert(densityIncrement <= 1.f,                    "densityIncrement must be <= 1.0");
+	static_assert(cursorRadius > 0.f,                         "cursorRadius must be > 0.0");
+	static_assert(cursorRadius < float(width) / 10.f,         "cursorRadius must be < width / 10");
+	static_assert(cursorRadius < float(height) / 10.f,        "cursorRadius must be < height / 10");
+	static_assert(forceMultiplier > 0.f,                      "forceMultiplier must be > 0.0");
+	static_assert(forceMultiplier <= 1000.f,                  "force_multiplier must be <= 1000.0");
+	static_assert(densityIncrementMultiplier > 0.f,           "densityIncrementMultiplier must be > 0.0");
+	static_assert(densityIncrementMultiplier <= 100.f,        "densityIncrementMultiplier must be <= 100.0");
+	static_assert(vorticityCoeff >= 0.f,                      "vorticityCoeff must be > 0.0");
+	static_assert(vorticityCoeff <= 10.f,                     "vorticityCoeff must be <= 10.0");
 
 	try
 	{
@@ -73,5 +73,5 @@ int main()
 		std::cerr << "Fatal: " << e.what() << "\n";
 		return EXIT_FAILURE;
 	}
-	return EXIT_SUCCESS;  
+	return EXIT_SUCCESS;
 }

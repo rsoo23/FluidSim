@@ -6,9 +6,9 @@
 class VertFragShader : public BaseShader
 {
 public:
-    VertFragShader(const std::filesystem::path& vertPath, const std::filesystem::path& fragPath);
+	VertFragShader(const std::filesystem::path& vertPath, const std::filesystem::path& fragPath);
 
-    ~VertFragShader()									= default;
+	~VertFragShader()									= default;
 
 	VertFragShader()							        = delete;
 	VertFragShader(const VertFragShader&)		        = delete;

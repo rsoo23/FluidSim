@@ -7,7 +7,7 @@ VertFragShader::VertFragShader(const std::filesystem::path& vertPath, const std:
 	GLuint vertShaderId{ createShader(vertPath, GL_VERTEX_SHADER) };
 	GLuint fragShaderId{ createShader(fragPath, GL_FRAGMENT_SHADER) }; 
 
-    // create shader program
+	// create shader program
 	m_ProgramId = glCreateProgram();
 	glAttachShader(m_ProgramId, vertShaderId);
 	glAttachShader(m_ProgramId, fragShaderId);

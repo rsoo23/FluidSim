@@ -72,7 +72,7 @@ private:
 	GLTexture m_DivTexture;
 	// Density
 	GLTexture m_DensTexture, m_DensTextureNext;
-	// Curl 
+	// Curl
 	GLTexture m_CurlTexture;
 	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_CurlShader, m_VorticityConfineShader;
 

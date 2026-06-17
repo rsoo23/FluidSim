@@ -10,40 +10,40 @@ uniform float vorticity;
 uniform float deltaTime;
 
 void main() {
-    ivec2 id = ivec2( gl_GlobalInvocationID.xy );
-    if (id.x >= int(screenWidth) || id.y >= int(screenHeight)) return;
-    float velX = imageLoad(velXTexture, id).r;
-    float velY = imageLoad(velYTexture, id).r;
-    float currCurl = imageLoad(curlTexture, id).r;
+	ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+	if (id.x >= int(screenWidth) || id.y >= int(screenHeight)) return;
+	float velX = imageLoad(velXTexture, id).r;
+	float velY = imageLoad(velYTexture, id).r;
+	float currCurl = imageLoad(curlTexture, id).r;
 
-    ivec2 coordLeft  = id + ivec2(-1, 0);
-    ivec2 coordRight = id + ivec2(1, 0);
-    ivec2 coordUp    = id + ivec2(0, -1);
-    ivec2 coordDown  = id + ivec2(0, 1);
+	ivec2 coordLeft  = id + ivec2(-1, 0);
+	ivec2 coordRight = id + ivec2(1, 0);
+	ivec2 coordUp    = id + ivec2(0, -1);
+	ivec2 coordDown  = id + ivec2(0, 1);
 
-    float curlLeft  = id.x > 0                 ? imageLoad(curlTexture, coordLeft).r  : currCurl;
-    float curlRight = id.x < screenWidth - 1   ? imageLoad(curlTexture, coordRight).r : currCurl;
-    float curlUp    = id.y > 0                 ? imageLoad(curlTexture, coordUp).r    : currCurl;
-    float curlDown  = id.y < screenHeight - 1  ? imageLoad(curlTexture, coordDown).r  : currCurl;
+	float curlLeft  = id.x > 0                 ? imageLoad(curlTexture, coordLeft).r  : currCurl;
+	float curlRight = id.x < screenWidth - 1   ? imageLoad(curlTexture, coordRight).r : currCurl;
+	float curlUp    = id.y > 0                 ? imageLoad(curlTexture, coordUp).r    : currCurl;
+	float curlDown  = id.y < screenHeight - 1  ? imageLoad(curlTexture, coordDown).r  : currCurl;
 
-    // vorticity gradient components:
-    float nX = abs(curlRight) - abs(curlLeft);
-    float nY = abs(curlDown) - abs(curlUp);
+	// vorticity gradient components:
+	float nX = abs(curlRight) - abs(curlLeft);
+	float nY = abs(curlDown) - abs(curlUp);
 
-    // calculate normalized components:
-    float epsilon = 1e-5; // prevent division by 0
-    float length = sqrt(pow(nX, 2) + pow(nY, 2)) + epsilon;
-    float normalizedNX = nX / length;
-    float normalizedNY = nY / length;
-    
-    // calculate force
-    float forceX = normalizedNY * currCurl * vorticity;
-    float forceY = -normalizedNX * currCurl * vorticity;
+	// calculate normalized components:
+	float epsilon = 1e-5; // prevent division by 0
+	float length = sqrt(pow(nX, 2) + pow(nY, 2)) + epsilon;
+	float normalizedNX = nX / length;
+	float normalizedNY = nY / length;
+	
+	// calculate force
+	float forceX = normalizedNY * currCurl * vorticity;
+	float forceY = -normalizedNX * currCurl * vorticity;
 
-    float finalVelX = velX + deltaTime * forceX;
-    float finalVelY = velY + deltaTime * forceY;
+	float finalVelX = velX + deltaTime * forceX;
+	float finalVelY = velY + deltaTime * forceY;
 
-    imageStore(velXTexture, id, vec4(finalVelX, 0.0, 0.0, 0.0));
-    imageStore(velYTexture, id, vec4(finalVelY, 0.0, 0.0, 0.0));
+	imageStore(velXTexture, id, vec4(finalVelX, 0.0, 0.0, 0.0));
+	imageStore(velYTexture, id, vec4(finalVelY, 0.0, 0.0, 0.0));
 }
 

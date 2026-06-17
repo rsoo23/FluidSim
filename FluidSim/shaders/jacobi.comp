@@ -10,22 +10,22 @@ uniform uint screenWidth;
 uniform uint screenHeight;
 
 void main() {
-    ivec2 id = ivec2( gl_GlobalInvocationID.xy );
-    if (id.x >= int(screenWidth) || id.y >= int(screenHeight)) return;
-    float val1 = imageLoad(readTexture1, id).r;
-    float val2 = imageLoad(readTexture2, id).r;
+	ivec2 id = ivec2( gl_GlobalInvocationID.xy );
+	if (id.x >= int(screenWidth) || id.y >= int(screenHeight)) return;
+	float val1 = imageLoad(readTexture1, id).r;
+	float val2 = imageLoad(readTexture2, id).r;
 
-    ivec2 coordLeft     = id + ivec2(-1, 0);
-    ivec2 coordRight    = id + ivec2(1, 0);
-    ivec2 coordUp       = id + ivec2(0, -1);
-    ivec2 coordDown     = id + ivec2(0, 1);
+	ivec2 coordLeft     = id + ivec2(-1, 0);
+	ivec2 coordRight    = id + ivec2(1, 0);
+	ivec2 coordUp       = id + ivec2(0, -1);
+	ivec2 coordDown     = id + ivec2(0, 1);
 
-    float left     = id.x > 0                  ? imageLoad(readTexture1, coordLeft).r  : val1;
-    float right    = id.x < screenWidth - 1    ? imageLoad(readTexture1, coordRight).r : val1;
-    float up       = id.y > 0                  ? imageLoad(readTexture1, coordUp).r    : val1;
-    float down     = id.y < screenHeight - 1   ? imageLoad(readTexture1, coordDown).r  : val1;
+	float left     = id.x > 0                  ? imageLoad(readTexture1, coordLeft).r  : val1;
+	float right    = id.x < screenWidth - 1    ? imageLoad(readTexture1, coordRight).r : val1;
+	float up       = id.y > 0                  ? imageLoad(readTexture1, coordUp).r    : val1;
+	float down     = id.y < screenHeight - 1   ? imageLoad(readTexture1, coordDown).r  : val1;
 
-    float finalVal = (val2 + a * (left + right + up + down)) / c;
+	float finalVal = (val2 + a * (left + right + up + down)) / c;
 
-    imageStore(writeTexture, id, vec4(finalVal, 0.0, 0.0, 0.0));
+	imageStore(writeTexture, id, vec4(finalVal, 0.0, 0.0, 0.0));
 }
