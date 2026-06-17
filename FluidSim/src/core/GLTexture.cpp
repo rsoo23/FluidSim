@@ -5,11 +5,6 @@ GLTexture::GLTexture(GLenum internalFormat, GLenum format, unsigned int screenWi
 {
 	generateTexture(internalFormat, screenWidth, screenHeight);
 	setEmptyTexture(format);
-	if (GLenum err = glGetError(); err != GL_NO_ERROR)
-    {
-		release();
-        throw std::runtime_error("Texture allocation failed");
-    };
 }
 
 GLTexture::GLTexture(GLTexture&& other) noexcept : m_Tex{ other.m_Tex }
