@@ -40,8 +40,8 @@ add_custom_command(TARGET FluidSim POST_BUILD
 	COMMENT "Copying shaders into build output directory"
 )
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET FluidSim PROPERTY CXX_STANDARD 20)
+set_property(TARGET FluidSim PROPERTY CXX_STANDARD 17)
+set_property(TARGET FluidSim PROPERTY CXX_STANDARD_REQUIRED ON)
 endif()
 
 # TODO: Add tests and install targets if needed.
