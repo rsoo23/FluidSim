@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "shader/ComputeShader.hpp"
 #include "input/InputHandler.hpp"
+#include "core/GLTexture.hpp"
 
 class FluidSim {
 public:
@@ -18,7 +19,7 @@ public:
 		float densityIncrement,
 		float densityIncrementMultiplier
 	);
-	~FluidSim();
+	~FluidSim() = default;
 
 	FluidSim()								= delete;
 	FluidSim(const FluidSim&)				= delete;
@@ -28,20 +29,16 @@ public:
 
 	void step(float deltaTime, const CursorState& cursorState);
 
-
 	GLuint getFinalTexture() const;
 
 private:
-	GLuint generateTexture() const;
-	void setEmptyTexture(GLuint texId);
-
 	void addForce(const CursorState& cursorState, float deltaTime);
 	void curl();
 	void vorticityConfine(float deltaTime);
-	void diffuse(GLuint& readTex, GLuint& writeTex, float coeff, float deltaTime);
+	void diffuse(GLTexture& readTex, GLTexture& writeTex, float coeff, float deltaTime);
 	void project();
-	void advect(GLuint& readTex, GLuint& writeTex, float deltaTime, bool isFinalStep);
-	void jacobiSolve(GLuint& readTex1, GLuint& readTex2, GLuint& writeTex, float a, float c);
+	void advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, bool isFinalStep);
+	void jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& writeTex, float a, float c);
 
 	// constants used for projection
 	static constexpr float PROJECT_A{ 1.f };
@@ -59,16 +56,16 @@ private:
 	float m_DensityIncrementMultiplier;
 
 	// Velocity
-	GLuint m_VelXTexture, m_VelXTextureNext;
-	GLuint m_VelYTexture, m_VelYTextureNext;
+	GLTexture m_VelXTexture, m_VelXTextureNext;
+	GLTexture m_VelYTexture, m_VelYTextureNext;
 	// Pressure
-	GLuint m_PresTexture, m_PresTextureNext;
+	GLTexture m_PresTexture, m_PresTextureNext;
 	// Divergence
-	GLuint m_DivTexture;
+	GLTexture m_DivTexture;
 	// Density
-	GLuint m_DensTexture, m_DensTextureNext;
+	GLTexture m_DensTexture, m_DensTextureNext;
 	// Curl 
-	GLuint m_CurlTexture;
-	// Compute Shader
+	GLTexture m_CurlTexture;
+
 	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_CurlShader, m_VorticityConfineShader;
 };

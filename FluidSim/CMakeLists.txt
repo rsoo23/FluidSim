@@ -12,6 +12,7 @@ add_executable(FluidSim
 	"main.cpp"
 	"pch.h"
 	"src/core/Application.cpp"
+	"src/core/GLTexture.cpp"
 	"src/render/Renderer.cpp"
 	"src/input/InputHandler.cpp"
 	"src/shader/BaseShader.cpp"
