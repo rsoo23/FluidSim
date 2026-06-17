@@ -7,6 +7,8 @@
 
 class FluidSim {
 public:
+	enum class ColorMode { SingleColor, MultiColor, Fire };
+
 	FluidSim(
 		unsigned int screenWidth,
 		unsigned int screenHeight,
@@ -17,7 +19,8 @@ public:
 		float vorticityCoeff,
 		float forceMultiplier,
 		float densityIncrement,
-		float densityIncrementMultiplier
+		float densityIncrementMultiplier,
+		ColorMode colorMode
 	);
 	~FluidSim() = default;
 
@@ -30,9 +33,13 @@ public:
 	void step(float deltaTime, const CursorState& cursorState);
 
 	GLuint getFinalTexture() const;
+	glm::vec3 getSplatColor() const;
 
 private:
+	static glm::vec3 hsvToRgb(float h, float s, float v);
+
 	void addForce(const CursorState& cursorState, float deltaTime) const;
+	void advectMulticolor(float deltaTime);
 	void curl() const;
 	void vorticityConfine(float deltaTime) const;
 	void diffuse(GLTexture& readTex, GLTexture& writeTex, float coeff, float deltaTime) const;
@@ -40,9 +47,10 @@ private:
 	void advect(GLTexture& readTex, GLTexture& writeTex, float deltaTime, bool isFinalStep) const;
 	void jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& writeTex, float a, float c) const;
 
-	// constants used for projection
+	// constants
 	static constexpr float PROJECT_A{ 1.f };
 	static constexpr float PROJECT_C{ 4.f };
+	static constexpr float HUE_SPEED{ 0.05f };
 
 	unsigned int m_ScreenWidth;
 	unsigned int m_ScreenHeight;
@@ -66,6 +74,13 @@ private:
 	GLTexture m_DensTexture, m_DensTextureNext;
 	// Curl 
 	GLTexture m_CurlTexture;
-
 	ComputeShader m_AddForceShader, m_AdvectShader, m_JacobiShader, m_ProjectShader, m_DivergenceShader, m_CurlShader, m_VorticityConfineShader;
+
+	ColorMode m_ColorMode;
+	float m_Hue;
+	glm::vec3 m_SplatColor;
+
+	// (Multicolor mode only)
+	std::optional<GLTexture> m_MulticolorTexture, m_MulticolorTextureNext;
+	std::optional<ComputeShader> m_AdvectMulticolorShader;
 };

@@ -1,8 +1,9 @@
 #version 460 core
 layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
-layout(r32f, binding = 0) uniform image2D velXTexture;
-layout(r32f, binding = 1) uniform image2D velYTexture;
-layout(r32f, binding = 2) uniform image2D densTexture;
+layout(r32f,    binding = 0) uniform image2D velXTexture;
+layout(r32f,    binding = 1) uniform image2D velYTexture;
+layout(r32f,    binding = 2) uniform image2D densTexture;
+layout(rgba32f, binding = 3) uniform image2D multicolorTexture;
 
 uniform vec2 cursorPos;
 uniform vec2 cursorForce;
@@ -11,6 +12,7 @@ uniform float cursorRadius;
 uniform float forceMultiplier;
 uniform float densityIncrementMultiplier;
 uniform float deltaTime;
+uniform vec3  splatColor;
 
 void main() {
     ivec2 id = ivec2( gl_GlobalInvocationID.xy );
@@ -36,4 +38,8 @@ void main() {
     imageStore(velXTexture, id, vec4(velX, 0.0, 0.0, 0.0));
     imageStore(velYTexture, id, vec4(velY, 0.0, 0.0, 0.0));
     imageStore(densTexture, id, vec4(dens, 0.0, 0.0, 0.0));
+
+    vec4 color = imageLoad(multicolorTexture, id);
+    color.rgb += splatColor * falloff * deltaTime * densityIncrementMultiplier;
+    imageStore(multicolorTexture, id, color);
 }

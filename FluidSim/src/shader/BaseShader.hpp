@@ -18,6 +18,7 @@ public:
     void setFloat(std::string_view name, float value) const;
     void setUint(std::string_view name, unsigned int value) const;
     void setVec2(std::string_view name, glm::vec2 v) const;
+    void setVec3(std::string_view name, glm::vec3 v) const;
 
 protected:
     GLuint m_ProgramId;

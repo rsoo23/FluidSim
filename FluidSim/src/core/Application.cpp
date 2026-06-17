@@ -59,12 +59,8 @@ void Application::run(const std::filesystem::path& vertexRelPath, const std::fil
 
 		fluidSim.step(static_cast<float>(deltaTime), cursorState);
 
-		std::cout << "FPS: " << 1 / deltaTime << "\n";
-		std::cout << cursorState.cursorDir.x << "\n";
-		std::cout << cursorState.cursorDir.y << "\n\n";
 
 		GLuint finalTex{ fluidSim.getFinalTexture() };
-
 		renderer.render(finalTex);
 
 		// Swap buffers and poll events  

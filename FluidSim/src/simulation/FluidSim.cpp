@@ -13,7 +13,8 @@ FluidSim::FluidSim(
 	float vorticityCoeff,
 	float forceMultiplier,
 	float densityIncrement,
-	float densityIncrementMultiplier
+	float densityIncrementMultiplier,
+	ColorMode colorMode
 ):
 	m_ScreenWidth{ screenWidth },
 	m_ScreenHeight{ screenHeight },
@@ -35,6 +36,9 @@ FluidSim::FluidSim(
 	m_DensTexture{ GL_R32F, GL_RED, screenWidth, screenHeight },
 	m_DensTextureNext{ GL_R32F, GL_RED, screenWidth, screenHeight },
 	m_CurlTexture{ GL_R32F, GL_RED, screenWidth, screenHeight },
+	m_ColorMode{ colorMode },
+	m_Hue{ 0.f },
+	m_SplatColor{ glm::vec3(0.f, 0.f, 0.f) },
 	m_AddForceShader{ R"(shaders\addForce.comp)", screenWidth, screenHeight },
 	m_AdvectShader{ R"(shaders\advect.comp)", screenWidth, screenHeight },
 	m_JacobiShader{ R"(shaders\jacobi.comp)", screenWidth, screenHeight },
@@ -42,10 +46,46 @@ FluidSim::FluidSim(
 	m_DivergenceShader{ R"(shaders\divergence.comp)", screenWidth, screenHeight },
 	m_VorticityConfineShader{ R"(shaders\vorticityConfine.comp)", screenWidth, screenHeight },
 	m_CurlShader{ R"(shaders\curl.comp)", screenWidth, screenHeight }
-{}
+{
+	if (m_ColorMode == ColorMode::MultiColor)
+	{
+		m_MulticolorTexture.emplace(GL_RGBA32F, GL_RGBA, screenWidth, screenHeight);
+		m_MulticolorTextureNext.emplace(GL_RGBA32F, GL_RGBA, screenWidth, screenHeight);
+		m_AdvectMulticolorShader.emplace(R"(shaders\advectMulticolor.comp)", screenWidth, screenHeight);
+	}
+}
+
+glm::vec3 FluidSim::hsvToRgb(float h, float s, float v)
+{
+	int i = static_cast<int>(h * 6.f);
+	float f = h * 6.f - i;
+	float p = v * (1.f - s);
+	float q = v * (1.f - f * s);
+	float t = v * (1.f - (1.f - f) * s);
+	switch (i % 6) {
+		case 0: return { v, t, p };
+		case 1: return { q, v, p };
+		case 2: return { p, v, t };
+		case 3: return { p, q, v };
+		case 4: return { t, p, v };
+		default: return { v, p, q };
+	}
+}
+
+glm::vec3 FluidSim::getSplatColor() const
+{
+	return m_SplatColor;
+}
 
 void FluidSim::step(float deltaTime, const CursorState& cursorState)
 {
+	// generate splat color
+	if (m_ColorMode == ColorMode::MultiColor)
+	{
+		m_Hue = glm::fract(m_Hue + HUE_SPEED * deltaTime);
+		m_SplatColor = hsvToRgb(m_Hue, 1.f, 1.f);
+	}
+
 	// add forces
 	addForce(cursorState, deltaTime);
 
@@ -64,11 +104,15 @@ void FluidSim::step(float deltaTime, const CursorState& cursorState)
 	// project
 	project();
 
-	// densities:
-	// diffuse
-	diffuse(m_DensTexture, m_DensTextureNext, m_DiffusionCoeff, deltaTime);
-	// advect
-	advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
+	if (m_ColorMode == ColorMode::SingleColor)
+	{
+		diffuse(m_DensTexture, m_DensTextureNext, m_DiffusionCoeff, deltaTime);
+		advect(m_DensTexture, m_DensTextureNext, deltaTime, true);
+	}
+	else if (m_ColorMode == ColorMode::MultiColor)
+	{
+		advectMulticolor(deltaTime);
+	}
 }
 
 void FluidSim::addForce(const CursorState& cursorState, float deltaTime) const
@@ -76,6 +120,8 @@ void FluidSim::addForce(const CursorState& cursorState, float deltaTime) const
 	m_AddForceShader.bindImageTexture(0, m_VelXTexture.getTex(), GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(1, m_VelYTexture.getTex(), GL_READ_WRITE, GL_R32F);
 	m_AddForceShader.bindImageTexture(2, m_DensTexture.getTex(), GL_READ_WRITE, GL_R32F);
+	if (m_ColorMode == ColorMode::MultiColor)
+		m_AddForceShader.bindImageTexture(3, m_MulticolorTexture->getTex(), GL_READ_WRITE, GL_RGBA32F);
 	m_AddForceShader.use();
 	m_AddForceShader.setVec2("cursorPos", glm::vec2(cursorState.cursorPosCurr));
 	m_AddForceShader.setVec2("cursorForce", glm::vec2(cursorState.cursorDir));
@@ -84,7 +130,22 @@ void FluidSim::addForce(const CursorState& cursorState, float deltaTime) const
 	m_AddForceShader.setFloat("forceMultiplier", m_ForceMultiplier);
 	m_AddForceShader.setFloat("densityIncrementMultiplier", m_DensityIncrementMultiplier);
 	m_AddForceShader.setFloat("deltaTime", deltaTime);
+	m_AddForceShader.setVec3("splatColor", m_SplatColor);
 	m_AddForceShader.dispatch();
+}
+
+void FluidSim::advectMulticolor(float deltaTime)
+{
+	m_AdvectMulticolorShader->bindImageTexture(0, m_MulticolorTexture->getTex(), GL_READ_ONLY, GL_RGBA32F);
+	m_AdvectMulticolorShader->bindImageTexture(1, m_MulticolorTextureNext->getTex(), GL_WRITE_ONLY, GL_RGBA32F);
+	m_AdvectMulticolorShader->bindImageTexture(2, m_VelXTexture.getTex(), GL_READ_ONLY, GL_R32F);
+	m_AdvectMulticolorShader->bindImageTexture(3, m_VelYTexture.getTex(), GL_READ_ONLY, GL_R32F);
+	m_AdvectMulticolorShader->use();
+	m_AdvectMulticolorShader->setUint("screenWidth", m_ScreenWidth);
+	m_AdvectMulticolorShader->setUint("screenHeight", m_ScreenHeight);
+	m_AdvectMulticolorShader->setFloat("deltaTime", deltaTime);
+	m_AdvectMulticolorShader->dispatchFinal();
+	std::swap(*m_MulticolorTexture, *m_MulticolorTextureNext);
 }
 
 void FluidSim::curl() const
@@ -180,5 +241,7 @@ void FluidSim::jacobiSolve(GLTexture& readTex1, GLTexture& readTex2, GLTexture& 
 
 GLuint FluidSim::getFinalTexture() const
 {
+	if (m_ColorMode == ColorMode::MultiColor)
+		return m_MulticolorTexture->getTex();
 	return m_DensTexture.getTex();
 }

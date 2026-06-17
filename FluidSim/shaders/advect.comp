@@ -9,7 +9,7 @@ uniform uint screenWidth;
 uniform uint screenHeight;
 uniform float deltaTime;
 
-float bilinearSample(ivec2 id, float x, float y, uint w, uint h) {
+float bilinearSample(float x, float y, uint w, uint h) {
     // Clamp coordinates slightly inside to avoid out-of-bounds access
     float xClamped = clamp(x, 0.0, float(w) - 1.001);
     float yClamped = clamp(y, 0.0, float(h) - 1.001);
@@ -47,7 +47,7 @@ void main() {
     float pointX = id.x - (velX * deltaTime);
     float pointY = id.y - (velY * deltaTime);
 
-    float finalVal = bilinearSample(id, pointX, pointY, screenWidth, screenHeight);
+    float finalVal = bilinearSample(pointX, pointY, screenWidth, screenHeight);
 
     imageStore(writeTexture, id, vec4(finalVal, 0.0, 0.0, 0.0));
 }

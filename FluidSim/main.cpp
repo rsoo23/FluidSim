@@ -9,8 +9,16 @@ int main()
 	constexpr unsigned int width{ 800 };
 	constexpr unsigned int height{ 800 };
 
+	constexpr FluidSim::ColorMode colorMode{ FluidSim::ColorMode::MultiColor };
+
 	const std::filesystem::path vertexRelPath{ R"(shaders\shader.vert)" };
-	const std::filesystem::path fragRelPath{ R"(shaders\fire.frag)" };
+	const std::filesystem::path fragRelPath = [&]() -> std::filesystem::path {
+		switch (colorMode) {
+			case FluidSim::ColorMode::MultiColor:  	return R"(shaders\multicolor.frag)";
+			case FluidSim::ColorMode::Fire: 		return R"(shaders\fire.frag)";
+			default:                        		return R"(shaders\singlecolor.frag)";
+		}
+	}();
 
 	constexpr unsigned int jacobiIterations{ 40u };
 	constexpr float diffusionCoeff{ 1.f };
@@ -44,7 +52,19 @@ int main()
 	{
 		Application app{ versionMajor, versionMinor, width, height, "FluidSim" };
 
-		FluidSim fluidSim{ width, height, jacobiIterations, diffusionCoeff, viscosityCoeff, cursorRadius, vorticityCoeff, forceMultiplier, densityIncrement, densityIncrementMultiplier };
+		FluidSim fluidSim{
+			width,
+			height,
+			jacobiIterations,
+			diffusionCoeff,
+			viscosityCoeff,
+			cursorRadius,
+			vorticityCoeff,
+			forceMultiplier,
+			densityIncrement,
+			densityIncrementMultiplier,
+			colorMode
+		};
 
 		app.run(vertexRelPath, fragRelPath, fluidSim);
 	}
