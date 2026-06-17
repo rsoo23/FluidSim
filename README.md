@@ -28,11 +28,22 @@ Dependencies (`glfw3`, `glad`, `glm`) are declared in `vcpkg.json` and installed
 
 ### Visual Studio
 
-1. Install [vcpkg](https://vcpkg.io) and integrate it: `vcpkg integrate install`
-2. Clone the repo using Visual Studio
-3. Select a build preset (e.g. `x64-debug` or `x64-release`)
-4. **Build → Build All** (`Ctrl+Shift+B`)
-5. Run via **Debug → Start Debugging** (`F5`)
+1. Install [vcpkg](https://vcpkg.io):
+
+```powershell
+git clone https://github.com/microsoft/vcpkg.git
+cd vcpkg; .\bootstrap-vcpkg.bat
+```
+
+2. Integrate it so that it is available to Visual Studio 
+
+```powershell
+vcpkg integrate install
+```
+
+3. Clone the repo using Visual Studio
+4. Select a build preset (e.g. `x64-debug` or `x64-release`)
+5. Build: `Ctrl+Shift+B`
 
 ## Performance
 
