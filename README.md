@@ -63,6 +63,11 @@ cd vcpkg; .\bootstrap-vcpkg.bat
 
 <img width="370" height="70" alt="image" src="https://github.com/user-attachments/assets/b598475e-20f7-46a8-84e8-ce663e1e2b67" />
 
+## Download Executables from Release
+1. Go to [Release](https://github.com/rsoo23/FluidSim/releases/tag/main)
+2. Download and unzip the latest `FluidSims.zip`
+3. Click on each .exe file to run (Currently it has 3 executables for each color mode since runtime color mode changing is currently not supported)
+
 ## Performance
 
 Averages ~70 FPS (Debug Build) and ~80 FPS (Release Build) at 800×800 with 40 Jacobi iterations on an NVIDIA GPU measured with RenderDoc.
